@@ -63,10 +63,7 @@ const stripeErrorTranslation = (intl, stripeError) => {
 const stripeElementsOptions = {
   fonts: [
     {
-      family: 'poppins',
-      fontSmoothing: 'antialiased',
-      src:
-        'local("poppins"), local("Poppins"), url("https://assets-sharetribecom.sharetribe.com/webfonts/poppins/Poppins-Medium.ttf") format("truetype")',
+      cssSrc: 'https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap',
     },
   ],
 };
@@ -77,7 +74,7 @@ const stripeElementsOptions = {
 const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 const cardStyles = {
   base: {
-    fontFamily: '"poppins", Helvetica, Arial, sans-serif',
+    fontFamily: '"Source Sans Pro", sans-serif;',
     fontSize: isMobile ? '14px' : '18px',
     fontSmoothing: 'antialiased',
     lineHeight: '24px',

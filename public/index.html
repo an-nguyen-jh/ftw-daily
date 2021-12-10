@@ -21,6 +21,9 @@
     <!-- End Favicons -->
 
     <!--!link-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
     <!--!ssrStyles-->
     <!--!ssrLinks-->
 
@@ -28,42 +31,6 @@
      /**
       * Poppins font is downloaded from Google Fonts but served from sharetribe.com / CDN
       */
-
-      @font-face {
-        /* 'Poppins-Regular' */
-        font-family: 'poppins';
-        src: url('https://assets-sharetribecom.sharetribe.com/webfonts/poppins/Poppins-Regular.ttf') format('truetype');
-        font-weight: 400; /* Regular */
-        font-style: normal;
-      }
-
-      @font-face {
-        font-family: 'poppins';
-        src: url('https://assets-sharetribecom.sharetribe.com/webfonts/poppins/Poppins-Medium.ttf') format('truetype');
-        font-weight: 500; /* Medium */
-        font-style: normal;
-      }
-
-      @font-face {
-        font-family: 'poppins';
-        src: url('https://assets-sharetribecom.sharetribe.com/webfonts/poppins/Poppins-MediumItalic.ttf') format('truetype');
-        font-weight: 500; /* Medium italics */
-        font-style: italic;
-      }
-
-      @font-face {
-        font-family: 'poppins';
-        src: url('https://assets-sharetribecom.sharetribe.com/webfonts/poppins/Poppins-SemiBold.ttf') format('truetype');
-        font-weight: 600; /* SemiBold */
-        font-style: normal;
-      }
-
-      @font-face {
-        font-family: 'poppins';
-        src: url('https://assets-sharetribecom.sharetribe.com/webfonts/poppins/Poppins-Bold.ttf') format('truetype');
-        font-weight: 700; /* Bold */
-        font-style: normal;
-      }
 
     </style>
     <script>
@@ -111,18 +78,16 @@
 
 
         // Fonts we use (Check font-face rules from <style> tag in <head> section)
-        var poppinsRegular = new FontFaceObserver('poppins', { weight: 400 });
-        var poppinsMedium = new FontFaceObserver('poppins', { weight: 500 });
-        var poppinsSemibold = new FontFaceObserver('poppins', { weight: 600 });
-        var poppinsBold = new FontFaceObserver('poppins', { weight: 700 });
+        var sourceSansProRegular = new FontFaceObserver('Source Sans Pro', { weight: 400 });
+        var sourceSansProSemiBold = new FontFaceObserver('Source Sans Pro', { weight: 600 });
+        var sourceSansProBold = new FontFaceObserver('Source Sans Pro', { weight: 700 });
 
         var fontLoadingTimeout = 5000;
 
         Promise.all([
-          poppinsRegular.load(null, fontLoadingTimeout),
-          poppinsMedium.load(null, fontLoadingTimeout),
-          poppinsSemibold.load(null, fontLoadingTimeout),
-          poppinsBold.load(null, fontLoadingTimeout)
+          sourceSansProRegular.load(null, fontLoadingTimeout),
+          sourceSansProSemiBold.load(null, fontLoadingTimeout),
+          sourceSansProBold.load(null, fontLoadingTimeout)
         ])
           .then(function () {
             document.documentElement.classList.add("fontsLoaded");
