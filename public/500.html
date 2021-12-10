@@ -5,7 +5,9 @@
     <title>500 Server error</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" href="/static/favicon.ico">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
 
      /**
@@ -15,29 +17,7 @@
       * https://fonts.google.com/specimen/Poppins
       */
 
-      @font-face {
-        font-family: 'poppins';
-        src: url('https://assets-sharetribecom.sharetribe.com/webfonts/poppins/Poppins-Medium.ttf') format('truetype');
-        font-weight: 500; /* Medium */
-        font-style: normal;
-      }
-
-      @font-face {
-        font-family: 'poppins';
-        src: url('https://assets-sharetribecom.sharetribe.com/webfonts/poppins/Poppins-SemiBold.ttf') format('truetype');
-        font-weight: 600; /* SemiBold */
-        font-style: normal;
-      }
-
-      @font-face {
-        font-family: 'poppins';
-        src: url('https://assets-sharetribecom.sharetribe.com/webfonts/poppins/Poppins-Bold.ttf') format('truetype');
-        font-weight: 700; /* Bold */
-        font-style: normal;
-      }
-
       body {
-        font-family: Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased; /* http://szafranek.net/blog/2009/02/22/font-smoothing-explained/ */
         -moz-osx-font-smoothing: grayscale; /* http://szafranek.net/blog/2009/02/22/font-smoothing-explained/ */
         text-rendering: optimizeSpeed;
@@ -122,7 +102,7 @@
       }
 
       .fontsLoaded body {
-        font-family: poppins, Helvetica, Arial, sans-serif;
+        font-family: 'Source Sans Pro', sans-serif;
         opacity: 1;
       }
 
@@ -195,12 +175,17 @@
             return;
           }
 
-          var poppinsMedium = new FontFace('poppins', 'url("https://assets-sharetribecom.sharetribe.com/webfonts/poppins/Poppins-Medium.ttf") format("truetype")', { style: 'normal', weight: '500' });
-          var poppinsSemibold = new FontFace('poppins', 'url("https://assets-sharetribecom.sharetribe.com/webfonts/poppins/Poppins-SemiBold.ttf") format("truetype")', { style: 'normal', weight: '600' });
-          var poppinsBold = new FontFace('poppins', 'url("https://assets-sharetribecom.sharetribe.com/webfonts/poppins/Poppins-Bold.ttf") format("truetype")', { style: 'normal', weight: '700' });
+          var sourceSansProRegular = new FontFaceObserver('Source Sans Pro', { weight: 400 });
+          var sourceSansProSemiBold = new FontFaceObserver('Source Sans Pro', { weight: 600 });
+          var sourceSansProBold = new FontFaceObserver('Source Sans Pro', { weight: 700 });
 
-          Promise.all([poppinsMedium.load(), poppinsSemibold.load(), poppinsBold.load()])
-            .then(function(values) {
+          var fontLoadingTimeout = 5000;
+
+          Promise.all([
+            sourceSansProRegular.load(null, fontLoadingTimeout),
+            sourceSansProSemiBold.load(null, fontLoadingTimeout),
+            sourceSansProBold.load(null, fontLoadingTimeout)
+          ]).then(function(values) {
               values.forEach(function(f) {
                 document.fonts.add(f);
               });

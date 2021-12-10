@@ -17,12 +17,12 @@
 :root {
   /* ================ Colors ================ */
 
-  --marketplaceColor: #c0392b;
-  --marketplaceColorLight: #ff4c38;
-  --marketplaceColorDark: #8c291e;
+  --marketplaceColor: #4b8fe2;
+  --marketplaceColorLight: #6fa5e7;
+  --marketplaceColorDark: #34649e;
 
   /* Used with inline CSS SVGs */
-  --marketplaceColorEncoded: %23c0392b;
+  --marketplaceColorEncoded: %234b8fe2;
 
   --successColor: #2ecc71;
   --successColorDark: #239954;
@@ -44,10 +44,10 @@
   --matterColorLightTransparent: rgba(255, 255, 255, 0.65);
 
   /* ================ Font ================ */
-  --fontFamily: 'poppins', Helvetica, Arial, sans-serif;
+  --fontFamily: sans-serif;
 
   --fontWeightRegular: 400;
-  --fontWeightMedium: 500;
+  --fontWeightMedium: 600;
   --fontWeightSemiBold: 600;
   --fontWeightBold: 700;
 
@@ -165,7 +165,6 @@
 /* ================ Global element styles ================ */
 
 body {
-  font-family: Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased; /* http://szafranek.net/blog/2009/02/22/font-smoothing-explained/ */
   -moz-osx-font-smoothing: grayscale; /* http://szafranek.net/blog/2009/02/22/font-smoothing-explained/ */
   text-rendering: optimizeSpeed;
@@ -247,7 +246,7 @@ label {
 }
 
 button {
-  font-family: Helvetica, Arial, sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
 }
 
 select {
@@ -279,9 +278,9 @@ textarea {
 
 .fontsLoaded {
   & body {
-    font-family: 'poppins', Helvetica, Arial, sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
   }
   & button {
-    font-family: 'poppins', Helvetica, Arial, sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
   }
 }
