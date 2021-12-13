@@ -18,7 +18,6 @@ const EditListingDescriptionFormComponent = props => (
     {...props}
     render={formRenderProps => {
       const {
-        categories,
         className,
         disabled,
         ready,
@@ -108,14 +107,6 @@ const EditListingDescriptionFormComponent = props => (
             placeholder={descriptionPlaceholderMessage}
             validate={composeValidators(required(descriptionRequiredMessage))}
           />
-
-          <CustomCategorySelectFieldMaybe
-            id="category"
-            name="category"
-            categories={categories}
-            intl={intl}
-          />
-
           <Button
             className={css.submitButton}
             type="submit"
