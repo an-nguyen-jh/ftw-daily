@@ -41,8 +41,9 @@ const EditListingFeaturesPanel = props => {
     <FormattedMessage id="EditListingFeaturesPanel.createListingTitle" />
   );
 
-  const amenities = publicData && publicData.amenities;
-  const initialValues = { amenities };
+  const subjectName = publicData && publicData.subject.name;
+  const educationLevel = publicData && publicData.subject.educationLevel;
+  const initialValues = { subjectName, educationLevel };
 
   return (
     <div className={classes}>
@@ -52,10 +53,15 @@ const EditListingFeaturesPanel = props => {
         name={FEATURES_NAME}
         initialValues={initialValues}
         onSubmit={values => {
-          const { amenities = [] } = values;
+          const { subjectName, educationLevel } = values;
 
           const updatedValues = {
-            publicData: { amenities },
+            publicData: {
+              subject: {
+                name: subjectName.trim(),
+                educationLevel,
+              },
+            },
           };
           onSubmit(updatedValues);
         }}

@@ -36,6 +36,14 @@ const EditListingFeaturesFormComponent = props => (
       const submitInProgress = updateInProgress;
       const submitDisabled = disabled || submitInProgress;
 
+      const subjectNameMessage = intl.formatMessage({ id: 'EditListingDescriptionForm.title' });
+      const subjectNamePlaceholderMessage = intl.formatMessage({
+        id: 'EditListingDescriptionForm.titlePlaceholder',
+      });
+      const subjectNameRequiredMessage = intl.formatMessage({
+        id: 'EditListingDescriptionForm.descriptionRequired',
+      });
+
       const { updateListingError, showListingsError } = fetchErrors || {};
       const errorMessage = updateListingError ? (
         <p className={css.error}>
@@ -55,7 +63,18 @@ const EditListingFeaturesFormComponent = props => (
           {errorMessage}
           {errorMessageShowListing}
 
-          <FieldCheckboxGroup className={css.features} id={name} name={name} options={options} />
+          {/* <FieldCheckboxGroup className={css.features} id={name} name={name} options={options} /> */}
+
+          <FieldTextInput
+            id="name"
+            name="name"
+            className={css.features}
+            type="text"
+            label={subjectNameMessage}
+            placeholder={subjectNamePlaceholderMessage}
+            validate={composeValidators(required(subjectNameRequiredMessage))}
+            autoFocus
+          />
 
           <Button
             className={css.submitButton}
