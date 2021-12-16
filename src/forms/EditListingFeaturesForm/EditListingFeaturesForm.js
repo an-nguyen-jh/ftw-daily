@@ -3,13 +3,15 @@ import { bool, func, shape, string } from 'prop-types';
 import classNames from 'classnames';
 import { Form as FinalForm } from 'react-final-form';
 import arrayMutators from 'final-form-arrays';
-import { FormattedMessage } from '../../util/reactIntl';
+import { intlShape, injectIntl, FormattedMessage } from '../../util/reactIntl';
+import { compose } from 'redux';
 import { findOptionsForSelectFilter } from '../../util/search';
 import { propTypes } from '../../util/types';
 import config from '../../config';
-import { Button, FieldCheckboxGroup, Form } from '../../components';
-
+import { Button, FieldTextInput, Form } from '../../components';
+import CustomEducationSelectField from './CustomEducationSelectField.js';
 import css from './EditListingFeaturesForm.module.css';
+import { composeValidators, required } from '../../util/validators';
 
 const EditListingFeaturesFormComponent = props => (
   <FinalForm
@@ -19,9 +21,10 @@ const EditListingFeaturesFormComponent = props => (
       const {
         disabled,
         ready,
+        name,
         rootClassName,
         className,
-        name,
+        intl,
         handleSubmit,
         pristine,
         saveActionMsg,
@@ -38,10 +41,10 @@ const EditListingFeaturesFormComponent = props => (
 
       const subjectNameMessage = intl.formatMessage({ id: 'EditListingDescriptionForm.title' });
       const subjectNamePlaceholderMessage = intl.formatMessage({
-        id: 'EditListingDescriptionForm.titlePlaceholder',
+        id: 'EditListingFeaturesForm.subjectNamePlaceholder',
       });
       const subjectNameRequiredMessage = intl.formatMessage({
-        id: 'EditListingDescriptionForm.descriptionRequired',
+        id: 'EditListingFeaturesForm.subjectNameRequired',
       });
 
       const { updateListingError, showListingsError } = fetchErrors || {};
@@ -57,13 +60,22 @@ const EditListingFeaturesFormComponent = props => (
         </p>
       ) : null;
 
-      const options = findOptionsForSelectFilter('amenities', filterConfig);
+      const educationTypeOptions = findOptionsForSelectFilter(
+        'educationType',
+        config.custom.filters
+      );
+
+      const educationClassOptions = findOptionsForSelectFilter('educationClass', filterConfig);
+      const educationStageOptions = findOptionsForSelectFilter('educationStage', filterConfig);
+
+      const educationTypeLabel = 'EditListingFeaturesForm.educationTypeLabel';
+      const educationTypePlaceholder = 'EditListingFeaturesForm.educationTypePlaceholder';
+      const educationTypeRequired = 'EditListingFeaturesForm.educationTypeRequired';
+
       return (
         <Form className={classes} onSubmit={handleSubmit}>
           {errorMessage}
           {errorMessageShowListing}
-
-          {/* <FieldCheckboxGroup className={css.features} id={name} name={name} options={options} /> */}
 
           <FieldTextInput
             id="name"
@@ -75,6 +87,18 @@ const EditListingFeaturesFormComponent = props => (
             validate={composeValidators(required(subjectNameRequiredMessage))}
             autoFocus
           />
+
+          <CustomEducationSelectField
+            id="type"
+            name="type"
+            options={educationTypeOptions}
+            intl={intl}
+            placeholderId={educationTypePlaceholder}
+            labelId={educationTypeLabel}
+            requiredId={educationTypeRequired}
+          ></CustomEducationSelectField>
+          {/* <CustomEducationSelectField></CustomEducationSelectField>
+          <CustomEducationSelectField></CustomEducationSelectField> */}
 
           <Button
             className={css.submitButton}
@@ -100,6 +124,7 @@ EditListingFeaturesFormComponent.defaultProps = {
 
 EditListingFeaturesFormComponent.propTypes = {
   rootClassName: string,
+  intl: intlShape.isRequired,
   className: string,
   name: string.isRequired,
   onSubmit: func.isRequired,
@@ -117,4 +142,4 @@ EditListingFeaturesFormComponent.propTypes = {
 
 const EditListingFeaturesForm = EditListingFeaturesFormComponent;
 
-export default EditListingFeaturesForm;
+export default compose(injectIntl)(EditListingFeaturesForm);

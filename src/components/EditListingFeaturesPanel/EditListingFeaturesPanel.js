@@ -2,11 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { FormattedMessage } from '../../util/reactIntl';
-
+import { findOptionsForSelectFilter } from '../../util/search';
 import { LISTING_STATE_DRAFT } from '../../util/types';
 import { ensureListing } from '../../util/data';
 import { EditListingFeaturesForm } from '../../forms';
 import { ListingLink } from '../../components';
+import config from '../../config';
 
 import css from './EditListingFeaturesPanel.module.css';
 
@@ -41,25 +42,35 @@ const EditListingFeaturesPanel = props => {
     <FormattedMessage id="EditListingFeaturesPanel.createListingTitle" />
   );
 
-  const subjectName = publicData && publicData.subject.name;
-  const educationLevel = publicData && publicData.subject.educationLevel;
-  const initialValues = { subjectName, educationLevel };
+  const subjectName = publicData && publicData.subjects && publicData.subjects.name;
+  const educationType =
+    publicData &&
+    publicData.subjects &&
+    publicData.subjects.education &&
+    publicData.subjects.education.type;
+  const educationLevel =
+    publicData &&
+    publicData.subjects &&
+    publicData.subjects.education &&
+    publicData.subjects.education.level;
+
+  const initialValues = { name: subjectName, type: educationType, level: educationLevel };
 
   return (
     <div className={classes}>
       <h1 className={css.title}>{panelTitle}</h1>
       <EditListingFeaturesForm
         className={css.form}
-        name={FEATURES_NAME}
         initialValues={initialValues}
+        name={FEATURES_NAME}
         onSubmit={values => {
-          const { subjectName, educationLevel } = values;
-
+          const { name, type, level } = values;
           const updatedValues = {
             publicData: {
-              subject: {
-                name: subjectName.trim(),
-                educationLevel,
+              [FEATURES_NAME]: {
+                name: name.trim(),
+                type,
+                level,
               },
             },
           };

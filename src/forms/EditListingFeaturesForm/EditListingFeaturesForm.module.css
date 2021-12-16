@@ -23,6 +23,18 @@
   }
 }
 
+.formMargins {
+  margin-bottom: 24px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 32px;
+  }
+}
+
+.option {
+  composes: formMargins;
+}
+
 .error {
   color: var(--failColor);
 }
