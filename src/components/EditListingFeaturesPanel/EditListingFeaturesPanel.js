@@ -53,8 +53,18 @@ const EditListingFeaturesPanel = props => {
     publicData.subjects &&
     publicData.subjects.education &&
     publicData.subjects.education.level;
+  const educationClass =
+    publicData &&
+    publicData.subjects &&
+    publicData.subjects.education &&
+    publicData.subjects.education.class;
 
-  const initialValues = { name: subjectName, type: educationType, level: educationLevel };
+  const initialValues = {
+    name: subjectName,
+    type: educationType,
+    educationLevel,
+    educationClass,
+  };
 
   return (
     <div className={classes}>
@@ -64,17 +74,19 @@ const EditListingFeaturesPanel = props => {
         initialValues={initialValues}
         name={FEATURES_NAME}
         onSubmit={values => {
-          const { name, type, level } = values;
+          const { name, type, educationLevel, educationClass } = values;
           const updatedValues = {
             publicData: {
               [FEATURES_NAME]: {
                 name: name.trim(),
                 type,
-                level,
+                educationLevel,
+                educationClass,
               },
             },
           };
-          onSubmit(updatedValues);
+          console.log(updatedValues);
+          //onSubmit(updatedValues);
         }}
         onChange={onChange}
         saveActionMsg={submitButtonText}

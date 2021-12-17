@@ -152,12 +152,12 @@ export const filters = [
     config: {
       options: [
         {
-          key: 'level',
+          key: 'educationClass',
           label: 'Class (1-12)',
         },
         {
-          key: 'stage',
-          label: 'Stage (Primary, Secondary, High School)',
+          key: 'educationLevel',
+          label: 'Level (Primary, Secondary, High School)',
         },
       ],
     },
@@ -222,8 +222,8 @@ export const filters = [
     },
   },
   {
-    id: 'educationStage',
-    label: 'Education Stage',
+    id: 'educationLevel',
+    label: 'Education Level',
     type: 'SelectSingleFilter',
     group: 'secondary',
     queryParamNames: ['education_stage'],
