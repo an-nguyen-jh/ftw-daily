@@ -127,7 +127,6 @@ const EditListingWizardTab = props => {
           if (tab !== marketplaceTabs[marketplaceTabs.length - 1]) {
             // Create listing flow: smooth scrolling polyfill to scroll to correct tab
             handleCreateFlowTabScrolling(false);
-
             // After successful saving of draft data, user should be redirected to next tab
             redirectAfterDraftUpdate(r.data.data.id.uuid, params, tab, marketplaceTabs, history);
           } else {
@@ -185,20 +184,20 @@ const EditListingWizardTab = props => {
         />
       );
     }
-    case POLICY: {
-      const submitButtonTranslationKey = isNewListingFlow
-        ? 'EditListingWizard.saveNewPolicies'
-        : 'EditListingWizard.saveEditPolicies';
-      return (
-        <EditListingPoliciesPanel
-          {...panelProps(POLICY)}
-          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
-          onSubmit={values => {
-            onCompleteEditListingWizardTab(tab, values);
-          }}
-        />
-      );
-    }
+    // case POLICY: {
+    //   const submitButtonTranslationKey = isNewListingFlow
+    //     ? 'EditListingWizard.saveNewPolicies'
+    //     : 'EditListingWizard.saveEditPolicies';
+    //   return (
+    //     <EditListingPoliciesPanel
+    //       {...panelProps(POLICY)}
+    //       submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
+    //       onSubmit={values => {
+    //         onCompleteEditListingWizardTab(tab, values);
+    //       }}
+    //     />
+    //   );
+    // }
     case LOCATION: {
       const submitButtonTranslationKey = isNewListingFlow
         ? 'EditListingWizard.saveNewLocation'

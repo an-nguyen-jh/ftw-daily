@@ -36,12 +36,13 @@ const EditListingFeaturesFormComponent = props => (
         fetchErrors,
         filterConfig,
         values,
+        invalid,
       } = formRenderProps;
 
       const classes = classNames(rootClassName || css.root, className);
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
-      const submitDisabled = disabled || submitInProgress;
+      const submitDisabled = invalid || disabled || submitInProgress;
 
       const subjectNameMessage = intl.formatMessage({ id: 'EditListingDescriptionForm.title' });
       const subjectNamePlaceholderMessage = intl.formatMessage({
@@ -70,11 +71,10 @@ const EditListingFeaturesFormComponent = props => (
 
       const educationTypeLabel = 'EditListingFeaturesForm.educationTypeLabel';
       const educationTypePlaceholder = 'EditListingFeaturesForm.educationTypePlaceholder';
-      const educationTypeRequired = 'EditListingFeaturesForm.educationTypeRequired';
 
       const handleLevelSelectFieldAppearance = () => {
         switch (values.type) {
-          case EDUCATION_LEVEL:
+          case EDUCATION_LEVEL: {
             return (
               <CustomEducationSelectField
                 id={EDUCATION_LEVEL}
@@ -86,18 +86,20 @@ const EditListingFeaturesFormComponent = props => (
                 requiredId={`EditListingFeaturesForm.educationLevelRequired`}
               ></CustomEducationSelectField>
             );
-          case EDUCATION_CLASS:
+          }
+          case EDUCATION_CLASS: {
             return (
               <CustomEducationSelectField
                 id={EDUCATION_CLASS}
                 name={EDUCATION_CLASS}
                 options={educationClassOptions}
                 intl={intl}
-                placeholderId={`EditListingFeaturesForm.educationLevelPlaceholder`}
-                labelId={`EditListingFeaturesForm.educationLevelLabel`}
-                requiredId={`EditListingFeaturesForm.educationLevelRequired`}
+                placeholderId={`EditListingFeaturesForm.educationClassPlaceholder`}
+                labelId={`EditListingFeaturesForm.educationClassLabel`}
+                requiredId={`EditListingFeaturesForm.educationClassRequired`}
               ></CustomEducationSelectField>
             );
+          }
           default:
             return null;
         }
@@ -126,9 +128,11 @@ const EditListingFeaturesFormComponent = props => (
             intl={intl}
             placeholderId={educationTypePlaceholder}
             labelId={educationTypeLabel}
-            requiredId={educationTypeRequired}
+            requiredId={`EditListingFeaturesForm.educationTypeRequired`}
           ></CustomEducationSelectField>
+
           {handleLevelSelectFieldAppearance()}
+
           <Button
             className={css.submitButton}
             type="submit"

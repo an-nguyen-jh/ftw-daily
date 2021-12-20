@@ -7,7 +7,6 @@ import { LISTING_STATE_DRAFT } from '../../util/types';
 import { ensureListing } from '../../util/data';
 import { EditListingFeaturesForm } from '../../forms';
 import { ListingLink } from '../../components';
-import config from '../../config';
 
 import css from './EditListingFeaturesPanel.module.css';
 
@@ -43,21 +42,9 @@ const EditListingFeaturesPanel = props => {
   );
 
   const subjectName = publicData && publicData.subjects && publicData.subjects.name;
-  const educationType =
-    publicData &&
-    publicData.subjects &&
-    publicData.subjects.education &&
-    publicData.subjects.education.type;
-  const educationLevel =
-    publicData &&
-    publicData.subjects &&
-    publicData.subjects.education &&
-    publicData.subjects.education.level;
-  const educationClass =
-    publicData &&
-    publicData.subjects &&
-    publicData.subjects.education &&
-    publicData.subjects.education.class;
+  const educationType = publicData && publicData.subjects && publicData.subjects.type;
+  const educationLevel = publicData && publicData.subjects && publicData.subjects.educationLevel;
+  const educationClass = publicData && publicData.subjects && publicData.subjects.educationClass;
 
   const initialValues = {
     name: subjectName,
@@ -85,8 +72,7 @@ const EditListingFeaturesPanel = props => {
               },
             },
           };
-          console.log(updatedValues);
-          //onSubmit(updatedValues);
+          onSubmit(updatedValues);
         }}
         onChange={onChange}
         saveActionMsg={submitButtonText}
