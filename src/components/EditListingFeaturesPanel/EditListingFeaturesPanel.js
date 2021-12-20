@@ -64,7 +64,7 @@ const EditListingFeaturesPanel = props => {
           const { name, type, educationLevel, educationClass } = values;
           const updatedValues = {
             publicData: {
-              [FEATURES_NAME]: {
+              subjects: {
                 name: name.trim(),
                 type,
                 educationLevel,

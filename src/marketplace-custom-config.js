@@ -244,6 +244,25 @@ export const filters = [
       ],
     },
   },
+  {
+    id: 'paymentMethod',
+    label: 'Payment Method',
+    type: 'SelectSingleFilter',
+    group: 'secondary',
+    queryParamNames: ['payment_method'],
+    config: {
+      options: [
+        {
+          key: 'pre_paid',
+          label: 'Pre Paid',
+        },
+        {
+          key: 'post_paid',
+          label: 'Post Paid',
+        },
+      ],
+    },
+  },
 ];
 
 export const sortConfig = {

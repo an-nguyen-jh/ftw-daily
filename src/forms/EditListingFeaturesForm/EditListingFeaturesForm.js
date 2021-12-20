@@ -8,8 +8,7 @@ import { compose } from 'redux';
 import { findOptionsForSelectFilter } from '../../util/search';
 import { propTypes } from '../../util/types';
 import config from '../../config';
-import { Button, FieldTextInput, Form } from '../../components';
-import CustomEducationSelectField from './CustomEducationSelectField.js';
+import { Button, FieldTextInput, Form, CustomSelectField } from '../../components';
 import css from './EditListingFeaturesForm.module.css';
 import { composeValidators, required } from '../../util/validators';
 
@@ -76,7 +75,7 @@ const EditListingFeaturesFormComponent = props => (
         switch (values.type) {
           case EDUCATION_LEVEL: {
             return (
-              <CustomEducationSelectField
+              <CustomSelectField
                 id={EDUCATION_LEVEL}
                 name={EDUCATION_LEVEL}
                 options={educationLevelOptions}
@@ -84,12 +83,12 @@ const EditListingFeaturesFormComponent = props => (
                 placeholderId={`EditListingFeaturesForm.educationLevelPlaceholder`}
                 labelId={`EditListingFeaturesForm.educationLevelLabel`}
                 requiredId={`EditListingFeaturesForm.educationLevelRequired`}
-              ></CustomEducationSelectField>
+              ></CustomSelectField>
             );
           }
           case EDUCATION_CLASS: {
             return (
-              <CustomEducationSelectField
+              <CustomSelectField
                 id={EDUCATION_CLASS}
                 name={EDUCATION_CLASS}
                 options={educationClassOptions}
@@ -97,7 +96,7 @@ const EditListingFeaturesFormComponent = props => (
                 placeholderId={`EditListingFeaturesForm.educationClassPlaceholder`}
                 labelId={`EditListingFeaturesForm.educationClassLabel`}
                 requiredId={`EditListingFeaturesForm.educationClassRequired`}
-              ></CustomEducationSelectField>
+              ></CustomSelectField>
             );
           }
           default:
@@ -121,7 +120,7 @@ const EditListingFeaturesFormComponent = props => (
             autoFocus
           />
 
-          <CustomEducationSelectField
+          <CustomSelectField
             id="type"
             name="type"
             options={educationTypeOptions}
@@ -129,7 +128,7 @@ const EditListingFeaturesFormComponent = props => (
             placeholderId={educationTypePlaceholder}
             labelId={educationTypeLabel}
             requiredId={`EditListingFeaturesForm.educationTypeRequired`}
-          ></CustomEducationSelectField>
+          ></CustomSelectField>
 
           {handleLevelSelectFieldAppearance()}
 

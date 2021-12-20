@@ -89,7 +89,7 @@ const tabCompleted = (tab, listing) => {
     case LOCATION:
       return !!(geolocation && publicData && publicData.location && publicData.location.address);
     case PRICING:
-      return !!price;
+      return !!(price && publicData && publicData.paymentMethod);
     case AVAILABILITY:
       return !!availabilityPlan;
     case PHOTOS:

@@ -184,20 +184,20 @@ const EditListingWizardTab = props => {
         />
       );
     }
-    // case POLICY: {
-    //   const submitButtonTranslationKey = isNewListingFlow
-    //     ? 'EditListingWizard.saveNewPolicies'
-    //     : 'EditListingWizard.saveEditPolicies';
-    //   return (
-    //     <EditListingPoliciesPanel
-    //       {...panelProps(POLICY)}
-    //       submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
-    //       onSubmit={values => {
-    //         onCompleteEditListingWizardTab(tab, values);
-    //       }}
-    //     />
-    //   );
-    // }
+    case POLICY: {
+      const submitButtonTranslationKey = isNewListingFlow
+        ? 'EditListingWizard.saveNewPolicies'
+        : 'EditListingWizard.saveEditPolicies';
+      return (
+        <EditListingPoliciesPanel
+          {...panelProps(POLICY)}
+          submitButtonText={intl.formatMessage({ id: submitButtonTranslationKey })}
+          onSubmit={values => {
+            onCompleteEditListingWizardTab(tab, values);
+          }}
+        />
+      );
+    }
     case LOCATION: {
       const submitButtonTranslationKey = isNewListingFlow
         ? 'EditListingWizard.saveNewLocation'
