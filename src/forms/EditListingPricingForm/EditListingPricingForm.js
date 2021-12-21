@@ -11,7 +11,7 @@ import { formatMoney } from '../../util/currency';
 import { types as sdkTypes } from '../../util/sdkLoader';
 import { Button, Form, FieldCurrencyInput, CustomSelectField } from '../../components';
 import css from './EditListingPricingForm.module.css';
-
+import { required } from '../../util/validators';
 const { Money } = sdkTypes;
 
 export const EditListingPricingFormComponent = props => (
@@ -72,6 +72,19 @@ export const EditListingPricingFormComponent = props => (
         ? validators.composeValidators(priceRequired, minPriceRequired)
         : priceRequired;
 
+      const paymentMethodLabel = intl.formatMessage({
+        id: 'EditListingPricingForm.paymentMethodLabel',
+      });
+      const paymentMethodPlaceholder = intl.formatMessage({
+        id: 'EditListingPricingForm.paymentMethodPlaceholder',
+      });
+
+      const paymentMethodRequired = required(
+        intl.formatMessage({
+          id: 'EditListingPricingForm.paymentMethodRequired',
+        })
+      );
+
       const classes = classNames(css.root, className);
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
@@ -96,9 +109,9 @@ export const EditListingPricingFormComponent = props => (
             name="paymentMethod"
             options={paymentMethods}
             intl={intl}
-            placeholderId={`EditListingPricingForm.paymentMethodPlaceholder`}
-            labelId={`EditListingPricingForm.paymentMethodLabel`}
-            requiredId={`EditListingPricingForm.paymentMethodRequired`}
+            placeholder={paymentMethodPlaceholder}
+            label={paymentMethodLabel}
+            validate={paymentMethodRequired}
           ></CustomSelectField>
 
           <FieldCurrencyInput

@@ -71,31 +71,54 @@ const EditListingFeaturesFormComponent = props => (
       const educationTypeLabel = 'EditListingFeaturesForm.educationTypeLabel';
       const educationTypePlaceholder = 'EditListingFeaturesForm.educationTypePlaceholder';
 
+      const educationLevelRequired = required(
+        intl.formatMessage({
+          id: 'EditListingFeaturesForm.educationLevelRequired',
+        })
+      );
+      const educationClassRequired = required(
+        intl.formatMessage({
+          id: 'EditListingFeaturesForm.educationClassRequired',
+        })
+      );
       const handleLevelSelectFieldAppearance = () => {
         switch (values.type) {
           case EDUCATION_LEVEL: {
+            const educationLevelLabel = intl.formatMessage({
+              id: 'EditListingFeaturesForm.educationLevelLabel',
+            });
+            const educationLevelPlaceholder = intl.formatMessage({
+              id: 'EditListingFeaturesForm.educationLevelPlaceholder',
+            });
+
             return (
               <CustomSelectField
                 id={EDUCATION_LEVEL}
                 name={EDUCATION_LEVEL}
                 options={educationLevelOptions}
                 intl={intl}
-                placeholderId={`EditListingFeaturesForm.educationLevelPlaceholder`}
-                labelId={`EditListingFeaturesForm.educationLevelLabel`}
-                requiredId={`EditListingFeaturesForm.educationLevelRequired`}
+                placeholder={educationLevelPlaceholder}
+                label={educationLevelLabel}
+                validate={educationLevelRequired}
               ></CustomSelectField>
             );
           }
           case EDUCATION_CLASS: {
+            const educationClassLabel = intl.formatMessage({
+              id: 'EditListingFeaturesForm.educationClassLabel',
+            });
+            const educationClassPlaceholder = intl.formatMessage({
+              id: 'EditListingFeaturesForm.educationClassPlaceholder',
+            });
             return (
               <CustomSelectField
                 id={EDUCATION_CLASS}
                 name={EDUCATION_CLASS}
                 options={educationClassOptions}
                 intl={intl}
-                placeholderId={`EditListingFeaturesForm.educationClassPlaceholder`}
-                labelId={`EditListingFeaturesForm.educationClassLabel`}
-                requiredId={`EditListingFeaturesForm.educationClassRequired`}
+                placeholder={educationClassPlaceholder}
+                label={educationClassLabel}
+                validate={educationClassRequired}
               ></CustomSelectField>
             );
           }

@@ -1,33 +1,15 @@
 import React from 'react';
-import { required } from '../../util/validators';
 import { FieldSelect } from '..';
 
 import css from './CustomSelectField.module.css';
 
 const CustomSelectField = props => {
-  const { name, id, options, intl, placeholderId, labelId, requiredId } = props;
+  const { name, id, options, placeholder, label, validate } = props;
 
-  const optionLabel = intl.formatMessage({
-    id: labelId,
-  });
-  const optionPlaceholder = intl.formatMessage({
-    id: placeholderId,
-  });
-  const optionRequired = required(
-    intl.formatMessage({
-      id: requiredId,
-    })
-  );
   return options ? (
-    <FieldSelect
-      className={css.root}
-      name={name}
-      id={id}
-      label={optionLabel}
-      validate={optionRequired}
-    >
+    <FieldSelect className={css.root} name={name} id={id} label={label} validate={validate}>
       <option disabled value="">
-        {optionPlaceholder}
+        {placeholder}
       </option>
       {options.map(c => (
         <option key={c.key} value={c.key}>
