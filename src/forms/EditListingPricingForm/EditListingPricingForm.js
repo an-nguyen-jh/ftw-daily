@@ -9,9 +9,9 @@ import { LINE_ITEM_NIGHT, LINE_ITEM_DAY, propTypes } from '../../util/types';
 import * as validators from '../../util/validators';
 import { formatMoney } from '../../util/currency';
 import { types as sdkTypes } from '../../util/sdkLoader';
-import { Button, Form, FieldCurrencyInput } from '../../components';
+import { Button, Form, FieldCurrencyInput, CustomSelectField } from '../../components';
 import css from './EditListingPricingForm.module.css';
-
+import { required } from '../../util/validators';
 const { Money } = sdkTypes;
 
 export const EditListingPricingFormComponent = props => (
@@ -30,6 +30,7 @@ export const EditListingPricingFormComponent = props => (
         updated,
         updateInProgress,
         fetchErrors,
+        paymentMethods,
       } = formRenderProps;
 
       const unitType = config.bookingUnitType;
@@ -71,6 +72,19 @@ export const EditListingPricingFormComponent = props => (
         ? validators.composeValidators(priceRequired, minPriceRequired)
         : priceRequired;
 
+      const paymentMethodLabel = intl.formatMessage({
+        id: 'EditListingPricingForm.paymentMethodLabel',
+      });
+      const paymentMethodPlaceholder = intl.formatMessage({
+        id: 'EditListingPricingForm.paymentMethodPlaceholder',
+      });
+
+      const paymentMethodRequired = required(
+        intl.formatMessage({
+          id: 'EditListingPricingForm.paymentMethodRequired',
+        })
+      );
+
       const classes = classNames(css.root, className);
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
@@ -89,6 +103,17 @@ export const EditListingPricingFormComponent = props => (
               <FormattedMessage id="EditListingPricingForm.showListingFailed" />
             </p>
           ) : null}
+
+          <CustomSelectField
+            id="paymentMethod"
+            name="paymentMethod"
+            options={paymentMethods}
+            intl={intl}
+            placeholder={paymentMethodPlaceholder}
+            label={paymentMethodLabel}
+            validate={paymentMethodRequired}
+          ></CustomSelectField>
+
           <FieldCurrencyInput
             id="price"
             name="price"
@@ -115,7 +140,9 @@ export const EditListingPricingFormComponent = props => (
   />
 );
 
-EditListingPricingFormComponent.defaultProps = { fetchErrors: null };
+EditListingPricingFormComponent.defaultProps = {
+  fetchErrors: null,
+};
 
 EditListingPricingFormComponent.propTypes = {
   intl: intlShape.isRequired,

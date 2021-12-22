@@ -147,6 +147,7 @@ export { default as SortBy } from './SortBy/SortBy';
 export { default as StripeConnectAccountStatusBox } from './StripeConnectAccountStatusBox/StripeConnectAccountStatusBox';
 export { default as StripePaymentAddress } from './StripePaymentAddress/StripePaymentAddress';
 export { default as UserCard } from './UserCard/UserCard';
+export { default as CustomSelectField } from "./CustomSelectField/CustomSelectField";
 
 //////////////////////////////////////////////
 // Page sections and modal content wrappers //

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { FormattedMessage } from '../../util/reactIntl';
-
+import { findOptionsForSelectFilter } from '../../util/search';
 import { LISTING_STATE_DRAFT } from '../../util/types';
 import { ensureListing } from '../../util/data';
 import { EditListingFeaturesForm } from '../../forms';
@@ -10,7 +10,7 @@ import { ListingLink } from '../../components';
 
 import css from './EditListingFeaturesPanel.module.css';
 
-const FEATURES_NAME = 'amenities';
+const FEATURES_NAME = 'subjects';
 
 const EditListingFeaturesPanel = props => {
   const {
@@ -41,21 +41,36 @@ const EditListingFeaturesPanel = props => {
     <FormattedMessage id="EditListingFeaturesPanel.createListingTitle" />
   );
 
-  const amenities = publicData && publicData.amenities;
-  const initialValues = { amenities };
+  const subjectName = publicData && publicData.subjects && publicData.subjects.name;
+  const educationType = publicData && publicData.subjects && publicData.subjects.type;
+  const educationLevel = publicData && publicData.subjects && publicData.subjects.educationLevel;
+  const educationClass = publicData && publicData.subjects && publicData.subjects.educationClass;
+
+  const initialValues = {
+    name: subjectName,
+    type: educationType,
+    educationLevel,
+    educationClass,
+  };
 
   return (
     <div className={classes}>
       <h1 className={css.title}>{panelTitle}</h1>
       <EditListingFeaturesForm
         className={css.form}
-        name={FEATURES_NAME}
         initialValues={initialValues}
+        name={FEATURES_NAME}
         onSubmit={values => {
-          const { amenities = [] } = values;
-
+          const { name, type, educationLevel, educationClass } = values;
           const updatedValues = {
-            publicData: { amenities },
+            publicData: {
+              subjects: {
+                name: name.trim(),
+                type,
+                educationLevel,
+                educationClass,
+              },
+            },
           };
           onSubmit(updatedValues);
         }}

@@ -143,6 +143,126 @@ export const filters = [
       ],
     },
   },
+  {
+    id: 'educationType',
+    label: 'Education Type',
+    type: 'SelectSingleFilter',
+    group: 'secondary',
+    queryParamNames: ['education_type'],
+    config: {
+      options: [
+        {
+          key: 'educationClass',
+          label: 'Class (1-12)',
+        },
+        {
+          key: 'educationLevel',
+          label: 'Level (Primary, Secondary, High School)',
+        },
+      ],
+    },
+  },
+  {
+    id: 'educationClass',
+    label: 'Education Class',
+    type: 'SelectSingleFilter',
+    group: 'secondary',
+    queryParamNames: ['education_class'],
+    config: {
+      options: [
+        {
+          key: 'class',
+          label: 'Class 1',
+        },
+        {
+          key: 'class_2',
+          label: 'Class 2',
+        },
+        {
+          key: 'class_3',
+          label: 'Class 3',
+        },
+        {
+          key: 'class_4',
+          label: 'Class 4',
+        },
+        {
+          key: 'class_5',
+          label: 'Class 5',
+        },
+        {
+          key: 'class_6',
+          label: 'Class 6',
+        },
+        {
+          key: 'class_7',
+          label: 'Class 7',
+        },
+        {
+          key: 'class_8',
+          label: 'Class 8',
+        },
+        {
+          key: 'class_9',
+          label: 'Class 9',
+        },
+        {
+          key: 'class_10',
+          label: 'Class 10',
+        },
+        {
+          key: 'class_11',
+          label: 'Class 11',
+        },
+        {
+          key: 'class_12',
+          label: 'Class 12',
+        },
+      ],
+    },
+  },
+  {
+    id: 'educationLevel',
+    label: 'Education Level',
+    type: 'SelectSingleFilter',
+    group: 'secondary',
+    queryParamNames: ['education_stage'],
+    config: {
+      options: [
+        {
+          key: 'primary',
+          label: 'Primary',
+        },
+        {
+          key: 'secondary',
+          label: 'Secondary',
+        },
+        {
+          key: 'high_school',
+          label: 'High School',
+        },
+      ],
+    },
+  },
+  {
+    id: 'paymentMethod',
+    label: 'Payment Method',
+    type: 'SelectSingleFilter',
+    group: 'secondary',
+    queryParamNames: ['payment_method'],
+    config: {
+      options: [
+        {
+          key: 'pre_paid',
+          label: 'Pre Paid',
+        },
+        {
+          key: 'post_paid',
+          label: 'Post Paid',
+        },
+      ],
+    },
+  },
 ];
 
 export const sortConfig = {
