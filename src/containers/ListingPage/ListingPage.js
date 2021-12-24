@@ -46,11 +46,11 @@ import SectionImages from './SectionImages';
 import SectionAvatar from './SectionAvatar';
 import SectionHeading from './SectionHeading';
 import SectionDescriptionMaybe from './SectionDescriptionMaybe';
-import SectionFeaturesMaybe from './SectionFeaturesMaybe';
 import SectionReviews from './SectionReviews';
 import SectionHostMaybe from './SectionHostMaybe';
 import SectionRulesMaybe from './SectionRulesMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
+import SectionEducationsMaybe from './SectionEducationsMaybe';
 import css from './ListingPage.module.css';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
@@ -68,11 +68,6 @@ const priceData = (price, intl) => {
     };
   }
   return {};
-};
-
-const categoryLabel = (categories, key) => {
-  const cat = categories.find(c => c.key === key);
-  return cat ? cat.label : key;
 };
 
 export class ListingPageComponent extends Component {
@@ -376,15 +371,7 @@ export class ListingPageComponent extends Component {
       </NamedLink>
     );
 
-    const amenityOptions = findOptionsForSelectFilter('amenities', filterConfig);
-    const categoryOptions = findOptionsForSelectFilter('category', filterConfig);
-    const category =
-      publicData && publicData.category ? (
-        <span>
-          {categoryLabel(categoryOptions, publicData.category)}
-          <span className={css.separator}>•</span>
-        </span>
-      ) : null;
+    const educationTypeOptions = findOptionsForSelectFilter('educationType', filterConfig);
 
     return (
       <Page
@@ -429,13 +416,12 @@ export class ListingPageComponent extends Component {
                     priceTitle={priceTitle}
                     formattedPrice={formattedPrice}
                     richTitle={richTitle}
-                    category={category}
                     hostLink={hostLink}
                     showContactUser={showContactUser}
                     onContactUser={this.onContactUser}
                   />
                   <SectionDescriptionMaybe description={description} />
-                  <SectionFeaturesMaybe options={amenityOptions} publicData={publicData} />
+                  <SectionEducationsMaybe options={educationTypeOptions} publicData={publicData} />
                   <SectionRulesMaybe publicData={publicData} />
                   <SectionMapMaybe
                     geolocation={geolocation}

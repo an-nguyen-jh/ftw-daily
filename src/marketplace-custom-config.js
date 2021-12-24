@@ -33,6 +33,11 @@
  *         (i.e. pub_<key> or meta_<key>).
  */
 
+export const education = {
+  EDUCATION_CLASS: 'educationClass',
+  EDUCATION_LEVEL: 'educationLevel',
+};
+
 export const filters = [
   {
     id: 'dates',
@@ -148,7 +153,7 @@ export const filters = [
     label: 'Education Type',
     type: 'SelectSingleFilter',
     group: 'secondary',
-    queryParamNames: ['education_type'],
+    queryParamNames: ['pub_educationType'],
     config: {
       options: [
         {
@@ -167,7 +172,7 @@ export const filters = [
     label: 'Education Class',
     type: 'SelectSingleFilter',
     group: 'secondary',
-    queryParamNames: ['education_class'],
+    queryParamNames: ['pub_educationClass'],
     config: {
       options: [
         {
@@ -226,7 +231,7 @@ export const filters = [
     label: 'Education Level',
     type: 'SelectSingleFilter',
     group: 'secondary',
-    queryParamNames: ['education_stage'],
+    queryParamNames: ['pub_educationStage'],
     config: {
       options: [
         {
@@ -249,7 +254,7 @@ export const filters = [
     label: 'Payment Method',
     type: 'SelectSingleFilter',
     group: 'secondary',
-    queryParamNames: ['payment_method'],
+    queryParamNames: ['pub_paymentMethod'],
     config: {
       options: [
         {

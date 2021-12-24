@@ -7,15 +7,7 @@ import config from '../../config';
 import css from './ListingPage.module.css';
 
 const SectionHeading = props => {
-  const {
-    priceTitle,
-    formattedPrice,
-    richTitle,
-    category,
-    hostLink,
-    showContactUser,
-    onContactUser,
-  } = props;
+  const { priceTitle, formattedPrice, richTitle, hostLink, showContactUser, onContactUser } = props;
 
   const unitType = config.bookingUnitType;
   const isNightly = unitType === LINE_ITEM_NIGHT;
@@ -40,7 +32,6 @@ const SectionHeading = props => {
       <div className={css.heading}>
         <h1 className={css.title}>{richTitle}</h1>
         <div className={css.author}>
-          {category}
           <FormattedMessage id="ListingPage.hostedBy" values={{ name: hostLink }} />
           {showContactUser ? (
             <span className={css.contactWrapper}>

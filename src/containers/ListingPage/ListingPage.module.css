@@ -435,6 +435,32 @@
   }
 }
 
+.featuresName {
+  margin-bottom: 16px;
+}
+
+.featuresSubTitle {
+  /* Font */
+  @apply --marketplaceH4FontStyles;
+  color: var(--matterColorAnti);
+
+  margin-top: 0;
+  margin-bottom: 12px;
+  @media (--viewportMedium) {
+    margin-top: 0;
+    margin-bottom: 8px;
+  }
+}
+
+.featuresWrapper {
+  display: grid;
+  grid-template-columns: auto;
+  gap: 1rem;
+  @media (--viewportMedium) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
 .description {
   margin-top: 0;
   margin-bottom: 0;

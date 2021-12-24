@@ -12,15 +12,12 @@ import { Button, FieldTextInput, Form, CustomSelectField } from '../../component
 import css from './EditListingFeaturesForm.module.css';
 import { composeValidators, required } from '../../util/validators';
 
-const EDUCATION_LEVEL = 'educationLevel';
-const EDUCATION_CLASS = 'educationClass';
-
 const EditListingFeaturesFormComponent = props => {
-  const { onSubmit } = props;
+  const { onSubmit, educationConfig } = props;
 
   const handleSubmitSubjects = values => {
     let { type, educationLevel, educationClass } = values;
-    if (type === EDUCATION_LEVEL) {
+    if (type === educationConfig.EDUCATION_LEVEL) {
       educationClass = '';
     } else {
       educationLevel = '';
@@ -79,8 +76,14 @@ const EditListingFeaturesFormComponent = props => {
         ) : null;
 
         const educationTypeOptions = findOptionsForSelectFilter('educationType', filterConfig);
-        const educationClassOptions = findOptionsForSelectFilter(EDUCATION_CLASS, filterConfig);
-        const educationLevelOptions = findOptionsForSelectFilter(EDUCATION_LEVEL, filterConfig);
+        const educationClassOptions = findOptionsForSelectFilter(
+          educationConfig.EDUCATION_CLASS,
+          filterConfig
+        );
+        const educationLevelOptions = findOptionsForSelectFilter(
+          educationConfig.EDUCATION_LEVEL,
+          filterConfig
+        );
 
         const educationTypeLabel = intl.formatMessage({
           id: 'EditListingFeaturesForm.educationTypeLabel',
@@ -96,7 +99,7 @@ const EditListingFeaturesFormComponent = props => {
 
         const handleLevelSelectFieldAppearance = () => {
           switch (values.type) {
-            case EDUCATION_LEVEL: {
+            case educationConfig.EDUCATION_LEVEL: {
               const educationLevelLabel = intl.formatMessage({
                 id: 'EditListingFeaturesForm.educationLevelLabel',
               });
@@ -110,8 +113,8 @@ const EditListingFeaturesFormComponent = props => {
               );
               return (
                 <CustomSelectField
-                  id={EDUCATION_LEVEL}
-                  name={EDUCATION_LEVEL}
+                  id={educationConfig.EDUCATION_LEVEL}
+                  name={educationConfig.EDUCATION_LEVEL}
                   options={educationLevelOptions}
                   intl={intl}
                   placeholder={educationLevelPlaceholder}
@@ -120,7 +123,7 @@ const EditListingFeaturesFormComponent = props => {
                 ></CustomSelectField>
               );
             }
-            case EDUCATION_CLASS: {
+            case educationConfig.EDUCATION_CLASS: {
               const educationClassLabel = intl.formatMessage({
                 id: 'EditListingFeaturesForm.educationClassLabel',
               });
@@ -134,8 +137,8 @@ const EditListingFeaturesFormComponent = props => {
               );
               return (
                 <CustomSelectField
-                  id={EDUCATION_CLASS}
-                  name={EDUCATION_CLASS}
+                  id={educationConfig.EDUCATION_CLASS}
+                  name={educationConfig.EDUCATION_CLASS}
                   options={educationClassOptions}
                   intl={intl}
                   placeholder={educationClassPlaceholder}
@@ -198,6 +201,7 @@ EditListingFeaturesFormComponent.defaultProps = {
   className: null,
   fetchErrors: null,
   filterConfig: config.custom.filters,
+  educationConfig: config.custom.education,
 };
 
 EditListingFeaturesFormComponent.propTypes = {
