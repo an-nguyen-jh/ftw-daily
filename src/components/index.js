@@ -61,6 +61,7 @@ export { default as ValidationError } from './ValidationError/ValidationError';
 
 export { default as Button, PrimaryButton, SecondaryButton, InlineTextButton, SocialLoginButton } from './Button/Button';
 export { default as CookieConsent } from './CookieConsent/CookieConsent';
+export {default as DefectImageCarousel} from "./ImageCarousel/DefectImageCarousel";
 export { default as ImageCarousel } from './ImageCarousel/ImageCarousel';
 export { default as ImageFromFile } from './ImageFromFile/ImageFromFile';
 export { default as ListingLink } from './ListingLink/ListingLink';

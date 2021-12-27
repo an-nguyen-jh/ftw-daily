@@ -42,7 +42,6 @@
 /* Firefox doesn't support image aspect ratio inside flexbox */
 .aspectWrapper {
   position: relative; /* allow positioning own listing action bar */
-  padding-bottom: 66.6667%; /* 3:2 Aspect Ratio */
   background-color: var(--matterColorNegative); /* Loading BG color */
 
   /* Image carousel can be opened from the image, therefore we should show a pointer */
@@ -177,6 +176,13 @@
   @media (--viewportMedium) {
     margin: 0;
   }
+}
+
+.rootDefectCarousel {
+  position: relative;
+  width: 100%;
+  height: calc(60vw);
+  max-height: 65vh;
 }
 
 .carouselModalScrollLayer {
