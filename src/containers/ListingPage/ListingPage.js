@@ -52,6 +52,7 @@ import SectionRulesMaybe from './SectionRulesMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
 import SectionEducationsMaybe from './SectionEducationsMaybe';
 import css from './ListingPage.module.css';
+import SectionSimilarClassMaybe from './SectionSimilarClassMaybe';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
@@ -460,6 +461,9 @@ export class ListingPageComponent extends Component {
                   fetchLineItemsInProgress={fetchLineItemsInProgress}
                   fetchLineItemsError={fetchLineItemsError}
                 />
+              </div>
+              <div>
+                <SectionSimilarClassMaybe similarClasses={[]}></SectionSimilarClassMaybe>
               </div>
             </div>
           </LayoutWrapperMain>

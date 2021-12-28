@@ -44,9 +44,6 @@
   position: relative; /* allow positioning own listing action bar */
   background-color: var(--matterColorNegative); /* Loading BG color */
 
-  /* Image carousel can be opened from the image, therefore we should show a pointer */
-  cursor: pointer;
-
   @media (--viewportMedium) {
     padding-bottom: 0; /* No fixed aspect on desktop layouts */
   }

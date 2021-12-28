@@ -1,0 +1,12 @@
+.root {
+  margin-bottom: 23px;
+
+  @media (--viewportMedium) {
+    margin-bottom: 51px;
+  }
+
+  @media (--viewportLarge) {
+    margin-top: 50px;
+    margin-bottom: 0px;
+  }
+}
