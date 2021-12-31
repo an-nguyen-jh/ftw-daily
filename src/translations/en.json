@@ -405,6 +405,8 @@
   "ListingPage.subjects": "Education Type",
   "ListingPage.educationClass": "Education Class",
   "ListingPage.educationLevel": "Education Level",
+  "ListingPage.similarClassesError": "Loading similar classes failed",
+  "ListingPage.similarClassesTitle": "Some similar classes with this class",
   "LoadableComponentErrorBoundaryPage.title": "Page not fetched",
   "LoadableComponentErrorBoundaryPage.heading": "Oops, we couldn't fetch the page.",
   "LoadableComponentErrorBoundaryPage.description": "It looks like the app needs to be updated! Please, refresh the current page or go back to {link}.",

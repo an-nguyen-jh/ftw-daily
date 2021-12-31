@@ -200,6 +200,7 @@
     padding: 0 24px;
     display: flex;
     position: relative;
+    flex-wrap: wrap;
   }
 
   @media (--viewportLarge) {

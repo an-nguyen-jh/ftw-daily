@@ -182,7 +182,9 @@ export class ListingPageComponent extends Component {
       scrollingDisabled,
       showListingError,
       reviews,
+      similarClasses,
       fetchReviewsError,
+      fetchSimilarClassError,
       sendEnquiryInProgress,
       sendEnquiryError,
       timeSlots,
@@ -193,7 +195,6 @@ export class ListingPageComponent extends Component {
       fetchLineItemsInProgress,
       fetchLineItemsError,
     } = this.props;
-
     const listingId = new UUID(rawParams.id);
     const isPendingApprovalVariant = rawParams.variant === LISTING_PAGE_PENDING_APPROVAL_VARIANT;
     const isDraftVariant = rawParams.variant === LISTING_PAGE_DRAFT_VARIANT;
@@ -461,9 +462,10 @@ export class ListingPageComponent extends Component {
                   fetchLineItemsInProgress={fetchLineItemsInProgress}
                   fetchLineItemsError={fetchLineItemsError}
                 />
-              </div>
-              <div>
-                <SectionSimilarClassMaybe similarClasses={[]}></SectionSimilarClassMaybe>
+                <SectionSimilarClassMaybe
+                  similarClasses={similarClasses}
+                  fetchSimilarClassError={fetchSimilarClassError}
+                ></SectionSimilarClassMaybe>
               </div>
             </div>
           </LayoutWrapperMain>
@@ -483,6 +485,7 @@ ListingPageComponent.defaultProps = {
   showListingError: null,
   reviews: [],
   fetchReviewsError: null,
+  fetchSimilarClassError: null,
   timeSlots: null,
   fetchTimeSlotsError: null,
   sendEnquiryError: null,
@@ -521,6 +524,7 @@ ListingPageComponent.propTypes = {
   callSetInitialValues: func.isRequired,
   reviews: arrayOf(propTypes.review),
   fetchReviewsError: propTypes.error,
+  fetchSimilarClassError: propTypes.error,
   timeSlots: arrayOf(propTypes.timeSlot),
   fetchTimeSlotsError: propTypes.error,
   sendEnquiryInProgress: bool.isRequired,
@@ -539,7 +543,10 @@ const mapStateToProps = state => {
   const {
     showListingError,
     reviews,
+    similarClasses,
     fetchReviewsError,
+    fetchSimilarClassError,
+
     timeSlots,
     fetchTimeSlotsError,
     sendEnquiryInProgress,
@@ -572,7 +579,9 @@ const mapStateToProps = state => {
     enquiryModalOpenForListingId,
     showListingError,
     reviews,
+    similarClasses,
     fetchReviewsError,
+    fetchSimilarClassError,
     timeSlots,
     fetchTimeSlotsError,
     lineItems,

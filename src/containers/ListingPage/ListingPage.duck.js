@@ -6,7 +6,7 @@ import { storableError } from '../../util/errors';
 import { addMarketplaceEntities } from '../../ducks/marketplaceData.duck';
 import { transactionLineItems } from '../../util/api';
 import * as log from '../../util/log';
-import { denormalisedResponseEntities } from '../../util/data';
+import { denormalisedResponseEntities, updatedEntities } from '../../util/data';
 import { TRANSITION_ENQUIRE } from '../../util/transaction';
 import {
   LISTING_PAGE_DRAFT_VARIANT,
@@ -22,6 +22,9 @@ export const SET_INITIAL_VALUES = 'app/ListingPage/SET_INITIAL_VALUES';
 
 export const SHOW_LISTING_REQUEST = 'app/ListingPage/SHOW_LISTING_REQUEST';
 export const SHOW_LISTING_ERROR = 'app/ListingPage/SHOW_LISTING_ERROR';
+
+export const FETCH_SIMILAR_CLASSES_SUCCESS = 'app/ListingPage/FETCH_SIMILAR_CLASSES_SUCCESS';
+export const FETCH_SIMILAR_CLASSES_ERROR = 'app/ListingPage/FETCH_SIMILAR_CLASSES_ERROR';
 
 export const FETCH_REVIEWS_REQUEST = 'app/ListingPage/FETCH_REVIEWS_REQUEST';
 export const FETCH_REVIEWS_SUCCESS = 'app/ListingPage/FETCH_REVIEWS_SUCCESS';
@@ -44,7 +47,9 @@ export const SEND_ENQUIRY_ERROR = 'app/ListingPage/SEND_ENQUIRY_ERROR';
 const initialState = {
   id: null,
   showListingError: null,
+  fetchSimilarClassError: null,
   reviews: [],
+  similarClasses: [],
   fetchReviewsError: null,
   timeSlots: null,
   fetchTimeSlotsError: null,
@@ -66,6 +71,12 @@ const listingPageReducer = (state = initialState, action = {}) => {
       return { ...state, id: payload.id, showListingError: null };
     case SHOW_LISTING_ERROR:
       return { ...state, showListingError: payload };
+
+    case FETCH_SIMILAR_CLASSES_SUCCESS:
+      return { ...state, similarClasses: payload };
+
+    case FETCH_SIMILAR_CLASSES_ERROR:
+      return { ...state, fetchSimilarClassError: payload };
 
     case FETCH_REVIEWS_REQUEST:
       return { ...state, fetchReviewsError: null };
@@ -120,6 +131,16 @@ export const showListingError = e => ({
   payload: e,
 });
 
+export const fetchSimilarClassesSuccess = classes => ({
+  type: FETCH_SIMILAR_CLASSES_SUCCESS,
+  payload: classes,
+});
+export const fetchSimilarClassError = error => ({
+  type: FETCH_SIMILAR_CLASSES_ERROR,
+  error: true,
+  payload: error,
+});
+
 export const fetchReviewsRequest = () => ({ type: FETCH_REVIEWS_REQUEST });
 export const fetchReviewsSuccess = reviews => ({ type: FETCH_REVIEWS_SUCCESS, payload: reviews });
 export const fetchReviewsError = error => ({
@@ -156,6 +177,29 @@ export const sendEnquiryError = e => ({ type: SEND_ENQUIRY_ERROR, error: true, p
 
 // ================ Thunks ================ //
 
+export const getSimilarListings = (authorId, educationClass, educationLevel) => (
+  dispatch,
+  getState,
+  sdk
+) => {
+  const params = {
+    authorId: authorId,
+    // pub_educationClass: educationClass,
+    //pub_subjects: `educationLevel=${educationLevel}`,
+    include: ['author', 'images'],
+    'fields.image': ['variants.landscape-crop', 'variants.landscape-crop2x'],
+    'limit.images': 1,
+  };
+  return sdk.listings
+    .query(params)
+    .then(response => {
+      return response;
+    })
+    .catch(e => {
+      dispatch(fetchSimilarClassError(storableError(e)));
+    });
+};
+
 export const showListing = (listingId, isOwn = false) => (dispatch, getState, sdk) => {
   dispatch(showListingRequest(listingId));
   dispatch(fetchCurrentUser());
@@ -188,6 +232,25 @@ export const showListing = (listingId, isOwn = false) => (dispatch, getState, sd
   const show = isOwn ? sdk.ownListings.show(params) : sdk.listings.show(params);
 
   return show
+    .then(data => {
+      const authorId = data.data.data.relationships.author.data.id;
+      const { educationClass, educationLevel } = data.data.data.attributes.publicData.subjects;
+      dispatch(getSimilarListings(authorId, educationClass, educationLevel)).then(response => {
+        const similarClasses = response.data.data.filter(cls => listingId.uuid !== cls.id.uuid);
+        const classifyIncludes = updatedEntities({}, response.data);
+        similarClasses.forEach(cls => {
+          const author = cls.relationships.author;
+          const image = cls.relationships.images;
+          cls.author = classifyIncludes.user[author.data.id.uuid];
+          //images required an array
+          cls.images = [classifyIncludes.image[image.data[0].id.uuid]];
+          // console.log(cls);
+        });
+        dispatch(fetchSimilarClassesSuccess(similarClasses));
+      });
+
+      return data;
+    })
     .then(data => {
       dispatch(addMarketplaceEntities(data));
       return data;

@@ -224,7 +224,6 @@ export const queryOwnListings = queryParams => (dispatch, getState, sdk) => {
 
   const { perPage, ...rest } = queryParams;
   const params = { ...rest, per_page: perPage };
-
   return sdk.ownListings
     .query(params)
     .then(response => {
