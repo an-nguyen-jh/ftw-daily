@@ -72,6 +72,7 @@ const BookingPanel = props => {
   } = props;
 
   const price = listing.attributes.price;
+
   const hasListingState = !!listing.attributes.state;
   const isClosed = hasListingState && listing.attributes.state === LISTING_STATE_CLOSED;
   const showBookingDatesForm = hasListingState && !isClosed;
@@ -116,6 +117,14 @@ const BookingPanel = props => {
 
         <div className={css.bookingHeading}>
           <h2 className={titleClasses}>{title}</h2>
+          <div className={css.desktopPriceContainer}>
+            <div className={css.desktopPriceValue} title={priceTitle}>
+              {formattedPrice}
+            </div>
+            <div className={css.desktopPerUnit}>
+              <FormattedMessage id={unitTranslationKey} />
+            </div>
+          </div>
           {subTitleText ? <div className={css.bookingHelp}>{subTitleText}</div> : null}
         </div>
         {showBookingDatesForm ? (
