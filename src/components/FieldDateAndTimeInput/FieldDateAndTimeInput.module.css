@@ -7,7 +7,7 @@
   /* parent aka root is flexbox, this container takes all available space */
   flex-grow: 1;
   flex-shrink: 0;
-
+  z-index: 2;
   /* This container uses flexbox layout */
   display: flex;
   justify-content: space-between;
@@ -21,6 +21,10 @@
     padding: 0;
     margin-top: 24px;
   }
+}
+
+.zIndex1 {
+  z-index: 1;
 }
 
 .field {

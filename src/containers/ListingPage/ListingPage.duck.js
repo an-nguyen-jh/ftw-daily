@@ -233,25 +233,6 @@ export const showListing = (listingId, isOwn = false) => (dispatch, getState, sd
 
   return show
     .then(data => {
-      const authorId = data.data.data.relationships.author.data.id;
-      const { educationClass, educationLevel } = data.data.data.attributes.publicData.subjects;
-      dispatch(getSimilarListings(authorId, educationClass, educationLevel)).then(response => {
-        const similarClasses = response.data.data.filter(cls => listingId.uuid !== cls.id.uuid);
-        const classifyIncludes = updatedEntities({}, response.data);
-        similarClasses.forEach(cls => {
-          const author = cls.relationships.author;
-          const image = cls.relationships.images;
-          cls.author = classifyIncludes.user[author.data.id.uuid];
-          //images required an array
-          cls.images = [classifyIncludes.image[image.data[0].id.uuid]];
-          // console.log(cls);
-        });
-        dispatch(fetchSimilarClassesSuccess(similarClasses));
-      });
-
-      return data;
-    })
-    .then(data => {
       dispatch(addMarketplaceEntities(data));
       return data;
     })
@@ -388,7 +369,27 @@ export const loadData = (params, search) => dispatch => {
       dispatch(showListing(listingId)),
       dispatch(fetchTimeSlots(listingId)),
       dispatch(fetchReviews(listingId)),
-    ]);
+    ]).then(responses => {
+      if (responses[0] && responses[0].data && responses[0].data.data) {
+        //get similar classes
+        const listing = responses[0].data.data;
+        const authorId = listing.relationships.author.data.id;
+        const { educationClass, educationLevel } = listing.attributes.publicData.subjects;
+
+        dispatch(getSimilarListings(authorId, educationClass, educationLevel)).then(response => {
+          const similarClasses = response.data.data.filter(cls => listingId.uuid !== cls.id.uuid);
+          const classifyIncludes = updatedEntities({}, response.data);
+          similarClasses.forEach(cls => {
+            const author = cls.relationships.author;
+            const image = cls.relationships.images;
+            cls.author = classifyIncludes.user[author.data.id.uuid];
+            //images required an array
+            cls.images = [classifyIncludes.image[image.data[0].id.uuid]];
+          });
+          dispatch(fetchSimilarClassesSuccess(similarClasses));
+        });
+      }
+    });
   } else {
     return Promise.all([dispatch(showListing(listingId)), dispatch(fetchReviews(listingId))]);
   }
