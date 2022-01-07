@@ -52,17 +52,15 @@ export class BookingDatesFormComponent extends Component {
   // the values here to the bookingData object.
   handleOnChange(form, formValues) {
     const { startDate, bookingStartTime } = formValues.values ? formValues.values : {};
-
-    const bookingEndTimeLabel = getEndTimeOfClass(bookingStartTime, 'HH:mm');
+    const { listingId, isOwnListing, onFetchTransactionLineItems } = this.props;
+    const bookingEndTimeValue = getEndTimeOfClass(bookingStartTime, 'HH:mm');
     const bookingEndTime = new Date(getEndTimeOfClass(bookingStartTime, null)).toString();
-    console.log(typeof bookingEndTime);
 
-    form.change('bookingEndTime', bookingEndTimeLabel);
-    const listingId = this.props.listingId;
-    const isOwnListing = this.props.isOwnListing;
+    form.change('bookingEndTime', bookingEndTimeValue);
+    // const listingId = this.props.listingId;
+    // const isOwnListing = this.props.isOwnListing;
     if (startDate && bookingStartTime && bookingEndTime && !this.props.fetchLineItemsInProgress) {
-      console.log({ startDate, bookingStartTime, bookingEndTime });
-      this.props.onFetchTransactionLineItems({
+      onFetchTransactionLineItems({
         bookingData: { startDate, bookingStartTime, bookingEndTime },
         listingId,
         isOwnListing,

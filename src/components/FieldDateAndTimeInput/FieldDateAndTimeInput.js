@@ -100,6 +100,7 @@ class FieldDateAndTimeInputComponent extends Component {
               selectClassName={bookingStartDate ? css.select : css.selectDisabled}
               label={startTimeLabel}
               disabled={startTimeDisabled}
+              validate={required('required')}
             >
               {bookingStartDate ? (
                 availableStartTimes.map(p => (
