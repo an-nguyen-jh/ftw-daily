@@ -7,12 +7,28 @@ import moment from 'moment';
 import config from '../../config';
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import { required, bookingDatesRequired, composeValidators } from '../../util/validators';
-import { START_DATE, END_DATE, getEndTimeOfClass } from '../../util/dates';
+import {
+  START_DATE,
+  END_DATE,
+  getEndTimeOfClass,
+  dateTimeFromSpecificMoment,
+} from '../../util/dates';
 import { propTypes } from '../../util/types';
 import { Form, IconSpinner, PrimaryButton, FieldDateAndTimeInput } from '../../components';
 import EstimatedBreakdownMaybe from './EstimatedBreakdownMaybe';
 
 import css from './BookingDatesForm.module.css';
+
+const CLASS_DURATION = 8; //hours
+
+const generateStartTimeAndEndTimeOfClass = (startDate, startHour, classDuration, breakTime) => {
+  if (!startDate) {
+    return {};
+  }
+  const startTime = dateTimeFromSpecificMoment(startDate, 0, startHour);
+  const endTime = dateTimeFromSpecificMoment(startDate, 0, startHour + classDuration + breakTime);
+  return startTime && endTime ? { startTime, endTime } : {};
+};
 
 export class BookingDatesFormComponent extends Component {
   constructor(props) {
@@ -51,17 +67,23 @@ export class BookingDatesFormComponent extends Component {
   // In case you add more fields to the form, make sure you add
   // the values here to the bookingData object.
   handleOnChange(form, formValues) {
-    const { startDate, bookingStartTime } = formValues.values ? formValues.values : {};
+    const { startDate, startHour } = formValues.values ? formValues.values : {};
     const { listingId, isOwnListing, onFetchTransactionLineItems } = this.props;
-    const bookingEndTimeValue = getEndTimeOfClass(bookingStartTime, 'HH:mm');
-    const bookingEndTime = new Date(getEndTimeOfClass(bookingStartTime, null)).toString();
+    const { startTime, endTime } = generateStartTimeAndEndTimeOfClass(
+      startDate?.date,
+      parseInt(startHour),
+      CLASS_DURATION,
+      0
+    );
 
-    form.change('bookingEndTime', bookingEndTimeValue);
-    // const listingId = this.props.listingId;
-    // const isOwnListing = this.props.isOwnListing;
-    if (startDate && bookingStartTime && bookingEndTime && !this.props.fetchLineItemsInProgress) {
+    const bookingEndTimeValue = endTime && endTime.clone().format('HH:mm');
+    if (startHour && bookingEndTimeValue !== 'Invalid date') {
+      form.change('endTime', bookingEndTimeValue);
+    }
+
+    if (startHour && startTime && endTime && !this.props.fetchLineItemsInProgress) {
       onFetchTransactionLineItems({
-        bookingData: { startDate, bookingStartTime, bookingEndTime },
+        bookingData: { startTime: startTime.toDate(), endTime: endTime.toDate() }, //from Moment to Date object
         listingId,
         isOwnListing,
       });
@@ -113,8 +135,9 @@ export class BookingDatesFormComponent extends Component {
             fetchLineItemsError,
             form,
           } = fieldRenderProps;
-          const { startDate, endDate } = values && values.bookingDate ? values.bookingDate : {};
-
+          const { startDate, endTime, startHour } =
+            values && values.bookingData ? values.bookingData : {};
+          console.log({ bookingData: values });
           const bookingStartLabel = intl.formatMessage({
             id: 'BookingDatesForm.bookingStartTitle',
           });
@@ -125,17 +148,27 @@ export class BookingDatesFormComponent extends Component {
             </p>
           ) : null;
 
+          const startTimeInputProps = {
+            label: intl.formatMessage({ id: 'BookingDatesForm.startTime' }),
+            requiredMessage: intl.formatMessage({ id: 'BookingDatesForm.startTimeRequired' }),
+          };
+          const endTimeInputProps = {
+            label: intl.formatMessage({ id: 'BookingDatesForm.endTime' }),
+            requiredMessage: intl.formatMessage({ id: 'BookingDatesForm.endTimeRequired' }),
+            placeholder: intl.formatMessage({ id: 'BookingDatesForm.endTimePlaceholder' }),
+          };
           // This is the place to collect breakdown estimation data.
           // Note: lineItems are calculated and fetched from FTW backend
           // so we need to pass only booking data that is needed otherwise
           // If you have added new fields to the form that will affect to pricing,
           // you need to add the values to handleOnChange function
           const bookingData =
-            startDate && endDate
+            startDate && endTime && startHour
               ? {
                   unitType,
                   startDate,
-                  endDate,
+                  startHour,
+                  endTime,
                 }
               : null;
 
@@ -185,8 +218,12 @@ export class BookingDatesFormComponent extends Component {
           const startDateInputProps = {
             label: bookingStartLabel,
             placeholderText: startDatePlaceholderText,
+            requiredMessage: intl.formatMessage({
+              id: 'BookingDatesForm.startDateRequiredMessage',
+            }),
           };
 
+          const inputProps = { startDateInputProps, startTimeInputProps, endTimeInputProps };
           return (
             <Form onSubmit={handleSubmit} className={classes} enforcePagePreloadFor="CheckoutPage">
               {timeSlotsError}
@@ -198,7 +235,7 @@ export class BookingDatesFormComponent extends Component {
               />
 
               <FieldDateAndTimeInput
-                startDateInputProps={startDateInputProps}
+                {...inputProps}
                 formId={formId}
                 className={css.bookingDate}
                 name="bookingDate"

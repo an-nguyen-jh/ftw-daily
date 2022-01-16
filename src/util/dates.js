@@ -271,13 +271,24 @@ export const formatDateToText = (intl, date) => {
   };
 };
 
-export const createDateWithSpecificTime = (dayFromToday, hours) => {
-  const now = moment();
+/**
+ * Get date time from a specific day
+ *
+ * @param {String} date in dateTime format
+ *
+ * @param {Number} days the additional number of days from date
+ *
+ * @param {Number} hours the additional hours from the beginning of day
+ *
+ * @returns {String} string in '0000-00-00T00:00:00.000Z' format
+ */
+
+export const dateTimeFromSpecificMoment = (date, days, hours) => {
+  const now = moment(date);
   return now
     .startOf('day')
-    .add(dayFromToday, 'days')
-    .add(hours, 'hours')
-    .toDate();
+    .add(days, 'days')
+    .add(hours, 'hours');
 };
 
 export const getEndTimeOfClass = (startTime, format) => {

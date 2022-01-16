@@ -38,5 +38,6 @@ exports.daysBetween = (startDate, endDate) => {
   if (days < 0) {
     throw new Error('End date cannot be before start date');
   }
-  return days;
+  //after change day always equal to 0
+  return days === 0 ? 1 : days;
 };
