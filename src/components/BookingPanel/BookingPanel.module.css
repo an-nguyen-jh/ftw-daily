@@ -74,29 +74,9 @@
   }
 }
 
-.desktopPriceContainer {
-  display: flex;
-  align-items: flex-end;
-}
-
-.desktopPriceValue {
-  color: var(--marketplaceColor);
-  font-weight: var(--fontWeightSemiBold);
-  font-size: 21px;
-
-  @media (--viewportMedium) {
-    margin-right: 6px;
-    margin-bottom: 6px;
-  }
-}
-
-.desktopPerUnit {
-  font-weight: var(--fontWeightMedium);
+.bookingNotice {
+  font-style: italic;
   font-size: 14px;
-  line-height: 16px;
-  @media (--viewportMedium) {
-    margin-bottom: 12px;
-  }
 }
 
 .bookingTitle {

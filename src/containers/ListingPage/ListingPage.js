@@ -255,6 +255,7 @@ export class ListingPageComponent extends Component {
       <FormattedMessage id="ListingPage.bookingTitle" values={{ title: richTitle }} />
     );
     const bookingSubTitle = intl.formatMessage({ id: 'ListingPage.bookingSubTitle' });
+    const bookingNotice = intl.formatMessage({ id: 'ListingPage.bookingNotice' });
 
     const topbar = <TopbarContainer />;
 
@@ -456,6 +457,7 @@ export class ListingPageComponent extends Component {
                   onSubmit={handleBookingSubmit}
                   title={bookingTitle}
                   subTitle={bookingSubTitle}
+                  notice={bookingNotice}
                   authorDisplayName={authorDisplayName}
                   onManageDisableScrolling={onManageDisableScrolling}
                   timeSlots={timeSlots}

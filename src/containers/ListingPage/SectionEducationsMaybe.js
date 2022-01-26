@@ -6,31 +6,20 @@ import css from './ListingPage.module.css';
 import config from '../../config';
 
 const SectionEducationsMaybe = props => {
-  const { options, publicData, filterConfig, educationConfig } = props;
+  const { publicData, filterConfig, educationConfig } = props;
   if (!publicData) {
     return null;
   }
-  const isSubjectExists = publicData && publicData.subjects;
 
-  const subjectsName = isSubjectExists && publicData.subjects.name;
-  const selectedOption =
-    isSubjectExists && publicData.subjects.type ? publicData.subjects.type : '';
+  const subjectsName = publicData && publicData.subjectName;
+  const selectedOption = publicData && publicData.educationType ? publicData.educationType : '';
 
-  const findOptionLabel = (options, key) => {
-    const cat = options.find(option => option.key === key);
-    return cat ? cat.label : key;
-  };
-
-  const selectedOptionLabel = findOptionLabel(options, selectedOption);
-  const selectedSubOption = isSubjectExists
-    ? publicData.subjects.educationLevel
-      ? publicData.subjects.educationLevel
-      : publicData.subjects.educationClass
-    : '';
+  const selectedSubOption = publicData.educationLevel
+    ? publicData.educationLevel
+    : publicData.educationClass;
 
   const subOptions = findOptionsForSelectFilter(selectedOption, filterConfig);
 
-  const selectedSubOptionLabel = findOptionLabel(subOptions, selectedSubOption);
   let subOptionTitleId = '';
 
   switch (selectedOption) {
@@ -41,7 +30,7 @@ const SectionEducationsMaybe = props => {
       subOptionTitleId = 'ListingPage.educationLevel';
       break;
     default:
-      return '';
+      subOptionTitleId = 'ListingPage.invalidEducationOption';
   }
 
   return (
@@ -55,15 +44,15 @@ const SectionEducationsMaybe = props => {
       <div className={css.featuresWrapper}>
         <div>
           <h3 className={css.featuresSubTitle}>
-            <FormattedMessage id="ListingPage.subjects" />
+            <FormattedMessage id="ListingPage.subject" />
           </h3>
-          {selectedOptionLabel}
+          <FormattedMessage id={`ListingPage.${selectedOption}`} />
         </div>
         <div>
           <h3 className={css.featuresSubTitle}>
             <FormattedMessage id={subOptionTitleId} />
           </h3>
-          {selectedSubOptionLabel}
+          <FormattedMessage id={`ListingPage.${selectedSubOption}`} />
         </div>
       </div>
     </div>

@@ -184,8 +184,8 @@ export const getSimilarListings = (authorId, educationClass, educationLevel) => 
 ) => {
   const params = {
     authorId: authorId,
-    // pub_educationClass: educationClass,
-    //pub_subjects: `educationLevel=${educationLevel}`,
+    pub_educationClass: educationClass,
+    pub_educationLevel: educationLevel,
     include: ['author', 'images'],
     'fields.image': ['variants.landscape-crop', 'variants.landscape-crop2x'],
     'limit.images': 1,
@@ -374,9 +374,10 @@ export const loadData = (params, search) => dispatch => {
         //get similar classes
         const listing = responses[0].data.data;
         const authorId = listing.relationships.author.data.id;
-        const { educationClass, educationLevel } = listing.attributes.publicData.subjects;
+        const { educationClass, educationLevel } = listing.attributes.publicData;
 
         dispatch(getSimilarListings(authorId, educationClass, educationLevel)).then(response => {
+          console.log(response);
           const similarClasses = response.data.data.filter(cls => listingId.uuid !== cls.id.uuid);
           const classifyIncludes = updatedEntities({}, response.data);
           similarClasses.forEach(cls => {

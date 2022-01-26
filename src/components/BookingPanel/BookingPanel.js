@@ -58,6 +58,7 @@ const BookingPanel = props => {
     onSubmit,
     title,
     subTitle,
+    notice,
     authorDisplayName,
     onManageDisableScrolling,
     timeSlots,
@@ -117,15 +118,9 @@ const BookingPanel = props => {
 
         <div className={css.bookingHeading}>
           <h2 className={titleClasses}>{title}</h2>
-          <div className={css.desktopPriceContainer}>
-            <div className={css.desktopPriceValue} title={priceTitle}>
-              {formattedPrice}
-            </div>
-            <div className={css.desktopPerUnit}>
-              <FormattedMessage id={unitTranslationKey} />
-            </div>
-          </div>
+
           {subTitleText ? <div className={css.bookingHelp}>{subTitleText}</div> : null}
+          {notice ? <p className={css.bookingNotice}>{notice}</p> : null}
         </div>
         {showBookingDatesForm ? (
           <BookingDatesForm

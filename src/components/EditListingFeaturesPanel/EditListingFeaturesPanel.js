@@ -41,10 +41,7 @@ const EditListingFeaturesPanel = props => {
     <FormattedMessage id="EditListingFeaturesPanel.createListingTitle" />
   );
 
-  const subjectName = publicData && publicData.subjects && publicData.subjects.name;
-  const educationType = publicData && publicData.subjects && publicData.subjects.type;
-  const educationLevel = publicData && publicData.subjects && publicData.subjects.educationLevel;
-  const educationClass = publicData && publicData.subjects && publicData.subjects.educationClass;
+  const { subjectName, educationType, educationLevel, educationClass } = publicData;
 
   const initialValues = {
     name: subjectName,
@@ -64,12 +61,10 @@ const EditListingFeaturesPanel = props => {
           const { name, type, educationLevel, educationClass } = values;
           const updatedValues = {
             publicData: {
-              subjects: {
-                name: name.trim(),
-                type,
-                educationLevel,
-                educationClass,
-              },
+              subjectName: name.trim(),
+              educationType: type,
+              educationLevel,
+              educationClass,
             },
           };
           onSubmit(updatedValues);
