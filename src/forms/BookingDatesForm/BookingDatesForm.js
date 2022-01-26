@@ -6,7 +6,7 @@ import classNames from 'classnames';
 import moment from 'moment';
 import config from '../../config';
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
-import { START_DATE, END_DATE, dateTimeFromSpecificMoment } from '../../util/dates';
+import { dateTimeFromSpecificMoment } from '../../util/dates';
 import { propTypes } from '../../util/types';
 import { Form, IconSpinner, PrimaryButton, FieldDateAndTimeInput } from '../../components';
 import EstimatedBreakdownMaybe from './EstimatedBreakdownMaybe';
@@ -29,8 +29,19 @@ export class BookingDatesFormComponent extends Component {
     super(props);
     this.state = { startTime: null, endTime: null };
     this.handleOnChange = this.handleOnChange.bind(this);
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
+  handleFormSubmit(values) {
+    const { startDate } = values;
+    const { startTime, endTime } = this.state;
+    const updatedValues = {
+      startDate: startDate.date,
+      startTime,
+      endTime,
+    };
+    this.props.onSubmit(updatedValues);
+  }
   // When the values of the form are updated we need to fetch
   // lineItems from FTW backend for the EstimatedTransactionMaybe
   // In case you add more fields to the form, make sure you add
@@ -56,6 +67,7 @@ export class BookingDatesFormComponent extends Component {
         listingId,
         isOwnListing,
       });
+
       //store start time and end time in UTC format for Estimated breakdown
       this.setState({
         startTime: startTime.toDate(),
@@ -91,6 +103,7 @@ export class BookingDatesFormComponent extends Component {
       <FinalForm
         {...rest}
         unitPrice={unitPrice}
+        onSubmit={this.handleFormSubmit}
         render={fieldRenderProps => {
           const {
             startDatePlaceholder,
