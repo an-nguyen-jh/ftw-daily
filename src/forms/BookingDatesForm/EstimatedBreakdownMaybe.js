@@ -63,7 +63,7 @@ const estimatedTotalPrice = lineItems => {
 //
 // We need to use FTW backend to calculate the correct line items through thransactionLineItems
 // endpoint so that they can be passed to this estimated transaction.
-const estimatedTransaction = (bookingStart, bookingEnd, lineItems, userRole) => {
+const estimatedTransaction = (startDate, startTime, endTime, lineItems, userRole) => {
   const now = new Date();
 
   const isCustomer = userRole === 'customer';
@@ -80,12 +80,7 @@ const estimatedTransaction = (bookingStart, bookingEnd, lineItems, userRole) => 
 
   // local noon -> startOf('day') => 00:00 local => remove timezoneoffset => 00:00 API (UTC)
   const serverDayStart = dateFromLocalToAPI(
-    moment(bookingStart)
-      .startOf('day')
-      .toDate()
-  );
-  const serverDayEnd = dateFromLocalToAPI(
-    moment(bookingEnd)
+    moment(startDate.date)
       .startOf('day')
       .toDate()
   );
@@ -112,24 +107,24 @@ const estimatedTransaction = (bookingStart, bookingEnd, lineItems, userRole) => 
       id: new UUID('estimated-booking'),
       type: 'booking',
       attributes: {
-        start: serverDayStart,
-        end: serverDayEnd,
+        startDate: serverDayStart,
+        startTime: startTime,
+        endTime: endTime,
       },
     },
   };
 };
 
 const EstimatedBreakdownMaybe = props => {
-  const { unitType, startDate, endDate } = props.bookingData;
+  const { unitType, startDate, startTime, endTime } = props.bookingData;
   const lineItems = props.lineItems;
-
   // Currently the estimated breakdown is used only on ListingPage where we want to
   // show the breakdown for customer so we can use hard-coded value here
   const userRole = 'customer';
 
   const tx =
-    startDate && endDate && lineItems
-      ? estimatedTransaction(startDate, endDate, lineItems, userRole)
+    startDate && startTime && endTime && lineItems
+      ? estimatedTransaction(startDate, startTime, endTime, lineItems, userRole)
       : null;
 
   return tx ? (

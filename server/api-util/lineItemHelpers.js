@@ -99,7 +99,7 @@ exports.calculateQuantityFromDates = (startDate, endDate, type) => {
   if (type === LINE_ITEM_NIGHT) {
     return nightsBetween(startDate, endDate);
   } else if (type === LINE_ITEM_DAY) {
-    return daysBetween(startDate, endDate);
+    return 1; //after change class alway happen in 1 days
   }
   throw new Error(`Can't calculate quantity from dates to unit type: ${type}`);
 };

@@ -280,7 +280,7 @@ export const formatDateToText = (intl, date) => {
  *
  * @param {Number} hours the additional hours from the beginning of day
  *
- * @returns {String} string in '0000-00-00T00:00:00.000Z' format
+ * @returns {moment} moment object with additional days and hours
  */
 
 export const dateTimeFromSpecificMoment = (date, days, hours) => {
@@ -289,13 +289,4 @@ export const dateTimeFromSpecificMoment = (date, days, hours) => {
     .startOf('day')
     .add(days, 'days')
     .add(hours, 'hours');
-};
-
-export const getEndTimeOfClass = (startTime, format) => {
-  if (startTime) {
-    return moment(startTime)
-      .add(8, 'hours')
-      .format(format);
-  }
-  return undefined;
 };

@@ -6,13 +6,7 @@ import classNames from 'classnames';
 import moment from 'moment';
 import config from '../../config';
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
-import { required, bookingDatesRequired, composeValidators } from '../../util/validators';
-import {
-  START_DATE,
-  END_DATE,
-  getEndTimeOfClass,
-  dateTimeFromSpecificMoment,
-} from '../../util/dates';
+import { START_DATE, END_DATE, dateTimeFromSpecificMoment } from '../../util/dates';
 import { propTypes } from '../../util/types';
 import { Form, IconSpinner, PrimaryButton, FieldDateAndTimeInput } from '../../components';
 import EstimatedBreakdownMaybe from './EstimatedBreakdownMaybe';
@@ -33,33 +27,8 @@ const generateStartTimeAndEndTimeOfClass = (startDate, startHour, classDuration,
 export class BookingDatesFormComponent extends Component {
   constructor(props) {
     super(props);
-    this.state = { focusedInput: null };
-    this.handleFormSubmit = this.handleFormSubmit.bind(this);
-    this.onFocusedInputChange = this.onFocusedInputChange.bind(this);
+    this.state = { startTime: null, endTime: null };
     this.handleOnChange = this.handleOnChange.bind(this);
-  }
-
-  // Function that can be passed to nested components
-  // so that they can notify this component when the
-  // focused input changes.
-  onFocusedInputChange(focusedInput) {
-    this.setState({ focusedInput });
-  }
-
-  // In case start or end date for the booking is missing
-  // focus on that input, otherwise continue with the
-  // default handleSubmit function.
-  handleFormSubmit(e) {
-    const { startDate, endDate } = e.bookingDate || {};
-    if (!startDate) {
-      e.preventDefault();
-      this.setState({ focusedInput: START_DATE });
-    } else if (!endDate) {
-      e.preventDefault();
-      this.setState({ focusedInput: END_DATE });
-    } else {
-      this.props.onSubmit(e);
-    }
   }
 
   // When the values of the form are updated we need to fetch
@@ -86,6 +55,11 @@ export class BookingDatesFormComponent extends Component {
         bookingData: { startTime: startTime.toDate(), endTime: endTime.toDate() }, //from Moment to Date object
         listingId,
         isOwnListing,
+      });
+      //store start time and end time in UTC format for Estimated breakdown
+      this.setState({
+        startTime: startTime.toDate(),
+        endTime: endTime.toDate(),
       });
     }
   }
@@ -117,7 +91,6 @@ export class BookingDatesFormComponent extends Component {
       <FinalForm
         {...rest}
         unitPrice={unitPrice}
-        onSubmit={this.handleFormSubmit}
         render={fieldRenderProps => {
           const {
             startDatePlaceholder,
@@ -135,9 +108,9 @@ export class BookingDatesFormComponent extends Component {
             fetchLineItemsError,
             form,
           } = fieldRenderProps;
-          const { startDate, endTime, startHour } =
-            values && values.bookingData ? values.bookingData : {};
-          console.log({ bookingData: values });
+          const { startDate } = values || {};
+          const { startTime, endTime } = this.state;
+
           const bookingStartLabel = intl.formatMessage({
             id: 'BookingDatesForm.bookingStartTitle',
           });
@@ -163,11 +136,11 @@ export class BookingDatesFormComponent extends Component {
           // If you have added new fields to the form that will affect to pricing,
           // you need to add the values to handleOnChange function
           const bookingData =
-            startDate && endTime && startHour
+            startDate && endTime && startTime
               ? {
                   unitType,
                   startDate,
-                  startHour,
+                  startTime,
                   endTime,
                 }
               : null;
