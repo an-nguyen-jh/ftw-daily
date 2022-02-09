@@ -1,6 +1,5 @@
 import React from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
-import { findOptionsForSelectFilter } from '../../util/search';
 
 import css from './ListingPage.module.css';
 import config from '../../config';
@@ -17,8 +16,6 @@ const SectionEducationsMaybe = props => {
   const selectedSubOption = publicData.educationLevel
     ? publicData.educationLevel
     : publicData.educationClass;
-
-  const subOptions = findOptionsForSelectFilter(selectedOption, filterConfig);
 
   let subOptionTitleId = '';
 

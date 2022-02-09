@@ -85,13 +85,7 @@ const tabCompleted = (tab, listing) => {
     case DESCRIPTION:
       return !!(description && title);
     case FEATURES:
-      return !!(
-        publicData &&
-        publicData.subjectName &&
-        publicData.subjectType &&
-        publicData.educationLevel &&
-        publicData.educationClass
-      );
+      return !!(publicData && publicData.subjectName && publicData.educationType);
     case LOCATION:
       return !!(geolocation && publicData && publicData.location && publicData.location.address);
     case PRICING:

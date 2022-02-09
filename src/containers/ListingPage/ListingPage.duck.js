@@ -16,6 +16,7 @@ import { fetchCurrentUser, fetchCurrentUserHasOrdersSuccess } from '../../ducks/
 
 const { UUID } = sdkTypes;
 
+const SIMILAR_LISTINGS_REQUIRED = 5; // 4 similar listing + 1 display listing
 // ================ Action types ================ //
 
 export const SET_INITIAL_VALUES = 'app/ListingPage/SET_INITIAL_VALUES';
@@ -177,27 +178,58 @@ export const sendEnquiryError = e => ({ type: SEND_ENQUIRY_ERROR, error: true, p
 
 // ================ Thunks ================ //
 
-export const getSimilarListings = (authorId, educationClass, educationLevel) => (
+/**
+ *  get similar classes (same author and same education level) with the display class
+ * @param {UUID} authorId of current display listing
+ * @param {String} educationClass of current display listing
+ * @param {String} educationLevel of current display listing
+ * @returns {Object|Error} listing entity return form API
+ */
+
+export const getSimilarListings = (authorId, educationClass, educationLevel) => async (
   dispatch,
   getState,
   sdk
 ) => {
-  const params = {
-    authorId: authorId,
-    pub_educationClass: educationClass,
-    pub_educationLevel: educationLevel,
+  const sampleParams = {
     include: ['author', 'images'],
     'fields.image': ['variants.landscape-crop', 'variants.landscape-crop2x'],
     'limit.images': 1,
+    perPage: SIMILAR_LISTINGS_REQUIRED, //limit listings query
   };
-  return sdk.listings
-    .query(params)
-    .then(response => {
-      return response;
-    })
-    .catch(e => {
-      dispatch(fetchSimilarClassError(storableError(e)));
-    });
+  const sameEducationParams = !!educationClass
+    ? { ...sampleParams, pub_educationClass: educationClass }
+    : { ...sampleParams, pub_educationLevel: educationLevel };
+
+  const authorParams = { ...sampleParams, authorId };
+  try {
+    const authorListingsQuery = sdk.listings.query(authorParams);
+    const sameEducationListingsQuery = sdk.listings.query(sameEducationParams);
+
+    const [authorListings, sameEducationListings] = await Promise.all([
+      authorListingsQuery,
+      sameEducationListingsQuery,
+    ]);
+
+    const authorListingsLength = authorListings.data.data.length;
+    if (authorListingsLength < SIMILAR_LISTINGS_REQUIRED) {
+      const sameEducationListingsOfOtherAuthor = sameEducationListings.data.data.filter(
+        listing => listing.relationships.author.data.id.uuid !== authorId.uuid
+      );
+      const additionalListings = sameEducationListingsOfOtherAuthor.slice(
+        0,
+        SIMILAR_LISTINGS_REQUIRED - authorListingsLength
+      );
+      //insert listing data and includes
+      //NOTES: includes didn't filter yet and it may contains redundant elements, need to be filter out to find matches listing
+      authorListings.data.data.push(...additionalListings);
+      authorListings.data.included.push(...sameEducationListings.data.included);
+    }
+
+    return authorListings;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const showListing = (listingId, isOwn = false) => (dispatch, getState, sdk) => {
@@ -376,19 +408,25 @@ export const loadData = (params, search) => dispatch => {
         const authorId = listing.relationships.author.data.id;
         const { educationClass, educationLevel } = listing.attributes.publicData;
 
-        dispatch(getSimilarListings(authorId, educationClass, educationLevel)).then(response => {
-          console.log(response);
-          const similarClasses = response.data.data.filter(cls => listingId.uuid !== cls.id.uuid);
-          const classifyIncludes = updatedEntities({}, response.data);
-          similarClasses.forEach(cls => {
-            const author = cls.relationships.author;
-            const image = cls.relationships.images;
-            cls.author = classifyIncludes.user[author.data.id.uuid];
-            //images required an array
-            cls.images = [classifyIncludes.image[image.data[0].id.uuid]];
+        dispatch(getSimilarListings(authorId, educationClass, educationLevel))
+          .then(response => {
+            //filter out this current display listing
+            const similarClasses = response.data.data.filter(cls => listingId.uuid !== cls.id.uuid);
+            const classifyIncludes = updatedEntities({}, response.data);
+
+            similarClasses.forEach(cls => {
+              const author = cls.relationships.author;
+              const image = cls.relationships.images;
+              cls.author = classifyIncludes.user[author.data.id.uuid];
+              //images required an array
+              cls.images = image.data[0] ? [classifyIncludes.image[image.data[0].id.uuid]] : [];
+            });
+
+            dispatch(fetchSimilarClassesSuccess(similarClasses));
+          })
+          .catch(error => {
+            dispatch(fetchSimilarClassError(storableError(error)));
           });
-          dispatch(fetchSimilarClassesSuccess(similarClasses));
-        });
       }
     });
   } else {
