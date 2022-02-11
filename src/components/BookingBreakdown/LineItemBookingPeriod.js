@@ -1,6 +1,8 @@
+import moment from 'moment';
 import React from 'react';
+import { dateFromAPIToLocalNoon } from '../../util/dates';
 import { FormattedMessage, FormattedDate } from '../../util/reactIntl';
-import { propTypes } from '../../util/types';
+import { LINE_ITEM_NIGHT, propTypes } from '../../util/types';
 
 import css from './BookingBreakdown.module.css';
 

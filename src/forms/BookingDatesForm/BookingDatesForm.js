@@ -27,18 +27,18 @@ const generateStartTimeAndEndTimeOfClass = (startDate, startHour, classDuration,
 export class BookingDatesFormComponent extends Component {
   constructor(props) {
     super(props);
-    this.state = { startTime: null, endTime: null };
+    this.state = { startTime: null, endTime: null, startDate: null, endDate: null };
     this.handleOnChange = this.handleOnChange.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
   handleFormSubmit(values) {
-    const { startDate } = values;
-    const { startTime, endTime } = this.state;
+    const { startTime, endTime, startDate, endDate } = this.state;
     const updatedValues = {
-      startDate: startDate.date,
+      startDate: startDate,
       startTime,
       endTime,
+      endDate,
     };
     this.props.onSubmit(updatedValues);
   }
@@ -62,16 +62,21 @@ export class BookingDatesFormComponent extends Component {
     }
 
     if (startHour && startTime && endTime && !this.props.fetchLineItemsInProgress) {
+      const endDate = dateTimeFromSpecificMoment(startDate.date, 1, 0).toDate();
+      const bookingStartDate = moment(startDate.date)
+        .startOf('day')
+        .toDate();
       onFetchTransactionLineItems({
-        bookingData: { startTime: startTime.toDate(), endTime: endTime.toDate() }, //from Moment to Date object
+        bookingData: { startDate: bookingStartDate, endDate }, //from Moment to Date object
         listingId,
         isOwnListing,
       });
-
       //store start time and end time in UTC format for Estimated breakdown
       this.setState({
         startTime: startTime.toDate(),
         endTime: endTime.toDate(),
+        endDate: endDate,
+        startDate: bookingStartDate,
       });
     }
   }
@@ -121,8 +126,7 @@ export class BookingDatesFormComponent extends Component {
             fetchLineItemsError,
             form,
           } = fieldRenderProps;
-          const { startDate } = values || {};
-          const { startTime, endTime } = this.state;
+          const { startTime, endTime, startDate, endDate } = this.state;
 
           const bookingStartLabel = intl.formatMessage({
             id: 'BookingDatesForm.bookingStartTitle',
@@ -149,11 +153,12 @@ export class BookingDatesFormComponent extends Component {
           // If you have added new fields to the form that will affect to pricing,
           // you need to add the values to handleOnChange function
           const bookingData =
-            startDate && endTime && startTime
+            startDate && endTime && startTime && endDate
               ? {
                   unitType,
                   startDate,
                   startTime,
+                  endDate,
                   endTime,
                 }
               : null;

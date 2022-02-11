@@ -93,9 +93,6 @@ const checkIsPaymentExpired = existingTransaction => {
     : false;
 };
 
-//TODO: bookingDates has other properties
-//need to change logic to display data and operation function in CheckoutPage
-
 export class CheckoutPageComponent extends Component {
   constructor(props) {
     super(props);
@@ -138,7 +135,7 @@ export class CheckoutPageComponent extends Component {
   loadInitialData() {
     const {
       bookingData,
-      bookingTime,
+      bookingDate,
       listing,
       transaction,
       fetchSpeculatedTransaction,
@@ -157,15 +154,15 @@ export class CheckoutPageComponent extends Component {
     // Action is 'REPLACE' when user has directed through login/signup process
     const hasNavigatedThroughLink = history.action === 'PUSH' || history.action === 'REPLACE';
 
-    const hasDataInProps = !!(bookingData && bookingTime && listing) && hasNavigatedThroughLink;
+    const hasDataInProps = !!(bookingData && bookingDate && listing) && hasNavigatedThroughLink;
     if (hasDataInProps) {
       // Store data only if data is passed through props and user has navigated through a link.
-      storeData(bookingData, bookingTime, listing, transaction, STORAGE_KEY);
+      storeData(bookingData, bookingDate, listing, transaction, STORAGE_KEY);
     }
 
     // NOTE: stored data can be empty if user has already successfully completed transaction.
     const pageData = hasDataInProps
-      ? { bookingData, bookingTime, listing, transaction }
+      ? { bookingData, bookingDate, listing, transaction }
       : storedData(STORAGE_KEY);
 
     // Check if a booking is already created according to stored data.
@@ -177,21 +174,19 @@ export class CheckoutPageComponent extends Component {
       pageData.listing &&
       pageData.listing.id &&
       pageData.bookingData &&
-      pageData.bookingTime &&
-      pageData.bookingTime.bookingStartDate &&
-      pageData.bookingTime.bookingStartTime &&
-      pageData.bookingTime.bookingEndTime &&
+      pageData.bookingDate &&
+      pageData.bookingDate.bookingStart &&
+      pageData.bookingDate.bookingEnd &&
       !isBookingCreated;
 
     if (shouldFetchSpeculatedTransaction) {
       const listingId = pageData.listing.id;
       const transactionId = tx ? tx.id : null;
-      const { bookingStartDate, bookingStartTime, bookingEndTime } = pageData.bookingTime;
-
+      const { bookingStart, bookingEnd } = pageData.bookingDate;
       // Convert picked date to date that will be converted on the API as
       // a noon of correct year-month-date combo in UTC
-      const bookingStartForAPI = dateFromLocalToAPI(bookingStartTime);
-      const bookingEndForAPI = dateFromLocalToAPI(bookingEndTime);
+      const bookingStartForAPI = dateFromLocalToAPI(bookingStart);
+      const bookingEndForAPI = dateFromLocalToAPI(bookingEnd);
 
       // Fetch speculated transaction for showing price in booking breakdown
       // NOTE: if unit type is line-item/units, quantity needs to be added.
@@ -265,8 +260,8 @@ export class CheckoutPageComponent extends Component {
       const order = ensureTransaction(fnParams);
       if (order.id) {
         // Store order.
-        const { bookingData, bookingTime, listing } = pageData;
-        storeData(bookingData, bookingTime, listing, order, STORAGE_KEY);
+        const { bookingData, bookingDate, listing } = pageData;
+        storeData(bookingData, bookingDate, listing, order, STORAGE_KEY);
         this.setState({ pageData: { ...pageData, transaction: order } });
       }
 
@@ -454,7 +449,6 @@ export class CheckoutPageComponent extends Component {
           initialMessageFailedToTransaction,
           savePaymentMethodFailed: !paymentMethodSaved,
         };
-
         initializeOrderPage(initialValues, routes, dispatch);
         clearData(STORAGE_KEY);
         history.push(orderDetailsPath);
@@ -522,7 +516,7 @@ export class CheckoutPageComponent extends Component {
 
     const isLoading = !this.state.dataLoaded || speculateTransactionInProgress;
 
-    const { listing, bookingTime, transaction } = this.state.pageData;
+    const { listing, bookingDate, transaction, bookingData } = this.state.pageData;
     const existingTransaction = ensureTransaction(transaction);
     const speculatedTransaction = ensureTransaction(speculatedTransactionMaybe, {}, null);
     const currentListing = ensureListing(listing);
@@ -561,13 +555,8 @@ export class CheckoutPageComponent extends Component {
       currentAuthor.id.uuid === currentUser.id.uuid;
 
     const hasListingAndAuthor = !!(currentListing.id && currentAuthor.id);
-    const hasBookingDates = !!(
-      bookingTime &&
-      bookingTime.bookingStartDate &&
-      bookingTime.bookingStartTime &&
-      bookingTime.bookingEndTime
-    );
-    const hasRequiredData = hasListingAndAuthor && hasBookingDates;
+    const hasBookingDate = !!(bookingDate && bookingDate.bookingStart && bookingDate.bookingEnd);
+    const hasRequiredData = hasListingAndAuthor && hasBookingDate;
     const canShowPage = hasRequiredData && !isOwnListing;
     const shouldRedirect = !isLoading && !canShowPage;
 
@@ -577,7 +566,7 @@ export class CheckoutPageComponent extends Component {
       // eslint-disable-next-line no-console
       console.error('Missing or invalid data for checkout, redirecting back to listing page.', {
         transaction: speculatedTransaction,
-        bookingTime,
+        bookingDate,
         listing,
       });
       return <NamedRedirect name="ListingPage" params={params} />;
@@ -587,6 +576,10 @@ export class CheckoutPageComponent extends Component {
     // (i.e. have an id)
     const tx = existingTransaction.booking ? existingTransaction : speculatedTransaction;
     const txBooking = ensureBooking(tx.booking);
+    //display start and end time of class
+    txBooking.attributes.displayStart = bookingData.startTime;
+    txBooking.attributes.displayEnd = bookingData.endTime;
+
     const breakdown =
       tx.id && txBooking.id ? (
         <BookingBreakdown
@@ -858,7 +851,7 @@ CheckoutPageComponent.defaultProps = {
   confirmPaymentError: null,
   listing: null,
   bookingData: {},
-  bookingTime: null,
+  bookingDate: null,
   speculateTransactionError: null,
   speculatedTransaction: null,
   transaction: null,
@@ -870,11 +863,9 @@ CheckoutPageComponent.propTypes = {
   scrollingDisabled: bool.isRequired,
   listing: propTypes.listing,
   bookingData: object,
-  bookingTime: shape({
-    bookingStartDate: instanceOf(Date).isRequired,
-    bookingStartTime: instanceOf(Date).isRequired,
-
-    bookingEndTime: instanceOf(Date).isRequired,
+  bookingDate: shape({
+    bookingStart: instanceOf(Date).isRequired,
+    bookingEnd: instanceOf(Date).isRequired,
   }),
   fetchStripeCustomer: func.isRequired,
   stripeCustomerFetched: bool.isRequired,
@@ -916,7 +907,7 @@ const mapStateToProps = state => {
   const {
     listing,
     bookingData,
-    bookingTime,
+    bookingDate,
     stripeCustomerFetched,
     speculateTransactionInProgress,
     speculateTransactionError,
@@ -932,7 +923,7 @@ const mapStateToProps = state => {
     currentUser,
     stripeCustomerFetched,
     bookingData,
-    bookingTime,
+    bookingDate,
     speculateTransactionInProgress,
     speculateTransactionError,
     speculatedTransaction,
@@ -971,8 +962,8 @@ const CheckoutPage = compose(
 
 CheckoutPage.setInitialValues = (initialValues, saveToSessionStorage = false) => {
   if (saveToSessionStorage) {
-    const { listing, bookingData, bookingTime } = initialValues;
-    storeData(bookingData, bookingTime, listing, null, STORAGE_KEY);
+    const { listing, bookingData, bookingDate } = initialValues;
+    storeData(bookingData, bookingDate, listing, null, STORAGE_KEY);
   }
 
   return setInitialValues(initialValues);

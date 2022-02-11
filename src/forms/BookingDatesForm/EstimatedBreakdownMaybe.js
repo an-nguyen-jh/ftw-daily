@@ -63,7 +63,14 @@ const estimatedTotalPrice = lineItems => {
 //
 // We need to use FTW backend to calculate the correct line items through thransactionLineItems
 // endpoint so that they can be passed to this estimated transaction.
-const estimatedTransaction = (startDate, startTime, endTime, lineItems, userRole) => {
+const estimatedTransaction = (
+  bookingStart,
+  bookingEnd,
+  startTime,
+  endTime,
+  lineItems,
+  userRole
+) => {
   const now = new Date();
 
   const isCustomer = userRole === 'customer';
@@ -77,13 +84,6 @@ const estimatedTransaction = (startDate, startTime, endTime, lineItems, userRole
   // bookingStart: "Fri Mar 30 2018 12:00:00 GMT-1100 (SST)" aka "Fri Mar 30 2018 23:00:00 GMT+0000 (UTC)"
   // Server normalizes night/day bookings to start from 00:00 UTC aka "Thu Mar 29 2018 13:00:00 GMT-1100 (SST)"
   // The result is: local timestamp.subtract(12h).add(timezoneoffset) (in eg. -23 h)
-
-  // local noon -> startOf('day') => 00:00 local => remove timezoneoffset => 00:00 API (UTC)
-  const serverDayStart = dateFromLocalToAPI(
-    moment(startDate.date)
-      .startOf('day')
-      .toDate()
-  );
 
   return {
     id: new UUID('estimated-transaction'),
@@ -107,24 +107,25 @@ const estimatedTransaction = (startDate, startTime, endTime, lineItems, userRole
       id: new UUID('estimated-booking'),
       type: 'booking',
       attributes: {
-        startDate: serverDayStart,
-        startTime: startTime,
-        endTime: endTime,
+        start: bookingStart,
+        end: bookingEnd,
+        displayStart: startTime,
+        displayEnd: endTime,
       },
     },
   };
 };
 
 const EstimatedBreakdownMaybe = props => {
-  const { unitType, startDate, startTime, endTime } = props.bookingData;
+  const { unitType, startDate, endDate, startTime, endTime } = props.bookingData;
   const lineItems = props.lineItems;
   // Currently the estimated breakdown is used only on ListingPage where we want to
   // show the breakdown for customer so we can use hard-coded value here
   const userRole = 'customer';
 
   const tx =
-    startDate && startTime && endTime && lineItems
-      ? estimatedTransaction(startDate, startTime, endTime, lineItems, userRole)
+    startDate && endDate && lineItems
+      ? estimatedTransaction(startDate, endDate, startTime, endTime, lineItems, userRole)
       : null;
 
   return tx ? (
