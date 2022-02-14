@@ -244,7 +244,6 @@ propTypes.booking = shape({
   attributes: shape({
     end: instanceOf(Date).isRequired,
     start: instanceOf(Date).isRequired,
-
     displayStart: instanceOf(Date),
     displayEnd: instanceOf(Date),
     state: oneOf(BOOKING_STATES),

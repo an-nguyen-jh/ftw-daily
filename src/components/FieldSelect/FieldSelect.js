@@ -5,6 +5,7 @@ import classNames from 'classnames';
 import { ValidationError } from '../../components';
 
 import css from './FieldSelect.module.css';
+import { bool } from 'prop-types';
 
 const FieldSelectComponent = props => {
   const {
@@ -16,6 +17,7 @@ const FieldSelectComponent = props => {
     input,
     meta,
     children,
+    showErrorMessage,
     ...rest
   } = props;
 
@@ -41,7 +43,7 @@ const FieldSelectComponent = props => {
     <div className={classes}>
       {label ? <label htmlFor={id}>{label}</label> : null}
       <select {...selectProps}>{children}</select>
-      <ValidationError fieldMeta={meta} />
+      {showErrorMessage ? <ValidationError fieldMeta={meta} /> : null}
     </div>
   );
 };
@@ -53,6 +55,7 @@ FieldSelectComponent.defaultProps = {
   id: null,
   label: null,
   children: null,
+  showErrorMessage: true,
 };
 
 const { string, object, node } = PropTypes;
@@ -71,6 +74,7 @@ FieldSelectComponent.propTypes = {
   meta: object.isRequired,
 
   children: node,
+  showErrorMessage: bool,
 };
 
 const FieldSelect = props => {

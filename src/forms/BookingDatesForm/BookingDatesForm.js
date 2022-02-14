@@ -35,7 +35,7 @@ export class BookingDatesFormComponent extends Component {
   handleFormSubmit(values) {
     const { startTime, endTime, startDate, endDate } = this.state;
     const updatedValues = {
-      startDate: startDate,
+      startDate,
       startTime,
       endTime,
       endDate,
@@ -56,9 +56,9 @@ export class BookingDatesFormComponent extends Component {
       0
     );
 
-    const bookingEndTimeValue = endTime && endTime.clone().format('HH:mm');
-    if (startHour && bookingEndTimeValue !== 'Invalid date') {
-      form.change('endTime', bookingEndTimeValue);
+    const endTimeOfClass = endTime && endTime.clone().format('HH:mm');
+    if (startHour && endTimeOfClass !== 'Invalid date') {
+      form.change('endTime', endTimeOfClass);
     }
 
     if (startHour && startTime && endTime && !this.props.fetchLineItemsInProgress) {
@@ -66,12 +66,13 @@ export class BookingDatesFormComponent extends Component {
       const bookingStartDate = moment(startDate.date)
         .startOf('day')
         .toDate();
+      //time object in UTC format for Estimated breakdown
+
       onFetchTransactionLineItems({
         bookingData: { startDate: bookingStartDate, endDate }, //from Moment to Date object
         listingId,
         isOwnListing,
       });
-      //store start time and end time in UTC format for Estimated breakdown
       this.setState({
         startTime: startTime.toDate(),
         endTime: endTime.toDate(),
@@ -165,7 +166,7 @@ export class BookingDatesFormComponent extends Component {
 
           const showEstimatedBreakdown =
             bookingData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
-
+          //customer start booking from tomorrow
           const fixedTimeSlots = timeSlots && timeSlots.slice(1);
 
           const bookingInfoMaybe = showEstimatedBreakdown ? (
@@ -193,9 +194,7 @@ export class BookingDatesFormComponent extends Component {
             day: 'numeric',
           };
 
-          const now = moment();
-
-          const tomorrow = now
+          const tomorrow = moment()
             .startOf('day')
             .add(1, 'days')
             .toDate();

@@ -3,19 +3,16 @@ import { FormattedMessage } from '../../util/reactIntl';
 
 import css from './ListingPage.module.css';
 import config from '../../config';
+import { object } from 'prop-types';
 
 const SectionEducationsMaybe = props => {
-  const { publicData, filterConfig, educationConfig } = props;
+  const { publicData, educationConfig } = props;
   if (!publicData) {
     return null;
   }
 
-  const subjectsName = publicData && publicData.subjectName;
-  const selectedOption = publicData && publicData.educationType ? publicData.educationType : '';
-
-  const selectedSubOption = publicData.educationLevel
-    ? publicData.educationLevel
-    : publicData.educationClass;
+  const { subjectName, educationType: selectedOption } = publicData;
+  const selectedSubOption = publicData[selectedOption];
 
   let subOptionTitleId = '';
 
@@ -36,7 +33,7 @@ const SectionEducationsMaybe = props => {
         <h2 className={css.featuresTitle}>
           <FormattedMessage id="ListingPage.featuresTitle" />
         </h2>
-        {subjectsName}
+        {subjectName}
       </div>
       <div className={css.featuresWrapper}>
         <div>
@@ -57,8 +54,11 @@ const SectionEducationsMaybe = props => {
 };
 
 SectionEducationsMaybe.defaultProps = {
-  filterConfig: config.custom.filters,
   educationConfig: config.custom.education,
+};
+
+SectionEducationsMaybe.propTypes = {
+  publicData: object.isRequired,
 };
 
 export default SectionEducationsMaybe;

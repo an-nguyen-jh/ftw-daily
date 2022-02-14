@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
-import { ResponsiveImage, Modal, ImageCarousel, DefectImageCarousel } from '../../components';
+import { ResponsiveImage, Modal, ImageCarousel, SectionImageCarousel } from '../../components';
 import ActionBarMaybe from './ActionBarMaybe';
 
 import css from './ListingPage.module.css';
@@ -42,10 +42,10 @@ const SectionImages = props => {
       <div className={css.threeToTwoWrapper}>
         <div className={css.aspectWrapper}>
           {actionBar}
-          <DefectImageCarousel
+          <SectionImageCarousel
             rootClassName={css.rootDefectCarousel}
             images={listing.images}
-          ></DefectImageCarousel>
+          ></SectionImageCarousel>
           {viewPhotosButton}
         </div>
       </div>

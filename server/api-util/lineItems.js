@@ -30,6 +30,7 @@ const PROVIDER_COMMISSION_PERCENTAGE = -10;
 exports.transactionLineItems = (listing, bookingData) => {
   const unitPrice = listing.attributes.price;
   const { startDate, endDate } = bookingData;
+
   /**
    * If you want to use pre-defined component and translations for printing the lineItems base price for booking,
    * you should use one of the codes:

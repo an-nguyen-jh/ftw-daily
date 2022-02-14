@@ -17,7 +17,6 @@ import css from './FieldDateAndTimeInput.module.css';
 import FieldSelect from '../FieldSelect/FieldSelect';
 import FieldDateInput from '../FieldDateInput/FieldDateInput';
 import { bookingDateRequired, required } from '../../util/validators';
-import { intlShape } from '../../util/reactIntl';
 import FieldTextInput from '../FieldTextInput/FieldTextInput';
 
 const MAX_MOBILE_SCREEN_WIDTH = 768;
@@ -65,7 +64,7 @@ class FieldDateAndTimeInputComponent extends Component {
             <FieldDateInput
               className={css.fieldDateInput}
               name="startDate"
-              id={'bookingDate.startDate'}
+              id="startDate"
               label={startDateInputProps.label}
               placeholderText={startDateInputProps.placeholderText}
               format={v => (v && v.date ? { date: v.date } : v)}
@@ -74,6 +73,7 @@ class FieldDateAndTimeInputComponent extends Component {
               useMobileMargins
               showErrorMessage={true}
               validate={bookingDateRequired(startDateInputProps.requiredMessage)}
+              showErrorMessage={false}
             />
           </div>
         </div>
@@ -87,6 +87,7 @@ class FieldDateAndTimeInputComponent extends Component {
               label={startTimeInputProps.label}
               disabled={startTimeDisabled}
               validate={required(startTimeInputProps.requiredMessage)}
+              showErrorMessage={false}
             >
               {bookingStartDate ? (
                 availableStartTimes.map(p => (
@@ -112,7 +113,7 @@ class FieldDateAndTimeInputComponent extends Component {
               label={endTimeInputProps.label}
               placeholder={endTimeInputProps.placeholder}
               validate={required(endTimeInputProps.requiredMessage)}
-              showErrorMessage={true}
+              showErrorMessage={false}
             />
           </div>
         </div>

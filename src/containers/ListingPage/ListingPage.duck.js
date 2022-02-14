@@ -191,17 +191,17 @@ export const getSimilarListings = (authorId, educationClass, educationLevel) => 
   getState,
   sdk
 ) => {
-  const sampleParams = {
+  const generalParams = {
     include: ['author', 'images'],
     'fields.image': ['variants.landscape-crop', 'variants.landscape-crop2x'],
     'limit.images': 1,
     perPage: SIMILAR_LISTINGS_REQUIRED, //limit listings query
   };
   const sameEducationParams = !!educationClass
-    ? { ...sampleParams, pub_educationClass: educationClass }
-    : { ...sampleParams, pub_educationLevel: educationLevel };
+    ? { ...generalParams, pub_educationClass: educationClass }
+    : { ...generalParams, pub_educationLevel: educationLevel };
 
-  const authorParams = { ...sampleParams, authorId };
+  const authorParams = { ...generalParams, authorId };
   try {
     const authorListingsQuery = sdk.listings.query(authorParams);
     const sameEducationListingsQuery = sdk.listings.query(sameEducationParams);
@@ -221,7 +221,7 @@ export const getSimilarListings = (authorId, educationClass, educationLevel) => 
         SIMILAR_LISTINGS_REQUIRED - authorListingsLength
       );
       //insert listing data and includes
-      //NOTES: includes didn't filter yet and it may contains redundant elements, need to be filter out to find matches listing
+      //NOTES: includes didn't filter yet and it may contain redundant elements, need to be filtered out to find resources matches listing
       authorListings.data.data.push(...additionalListings);
       authorListings.data.included.push(...sameEducationListings.data.included);
     }

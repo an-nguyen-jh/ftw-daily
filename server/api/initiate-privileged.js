@@ -7,7 +7,6 @@ module.exports = (req, res) => {
   const listingId = bodyParams && bodyParams.params ? bodyParams.params.listingId : null;
 
   const sdk = getSdk(req, res);
-
   let lineItems = null;
 
   sdk.listings
@@ -15,10 +14,12 @@ module.exports = (req, res) => {
     .then(listingResponse => {
       const listing = listingResponse.data.data;
       lineItems = transactionLineItems(listing, bookingData);
+
       return getTrustedSdk(req);
     })
     .then(trustedSdk => {
       const { params } = bodyParams;
+
       // Add lineItems to the body params
       const body = {
         ...bodyParams,
@@ -27,6 +28,7 @@ module.exports = (req, res) => {
           lineItems,
         },
       };
+
       if (isSpeculative) {
         return trustedSdk.transactions.initiateSpeculative(body, queryParams);
       }
@@ -34,7 +36,6 @@ module.exports = (req, res) => {
     })
     .then(apiResponse => {
       const { status, statusText, data } = apiResponse;
-
       res
         .status(status)
         .set('Content-Type', 'application/transit+json')

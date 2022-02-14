@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { injectIntl, intlShape } from '../../util/reactIntl';
 import classNames from 'classnames';
-import { ResponsiveImage, IconSpinner } from '../../components';
+import { ResponsiveImage, IconSpinner } from '..';
 import { propTypes } from '../../util/types';
 
 import css from './ImageCarousel.module.css';
@@ -10,7 +10,7 @@ import css from './ImageCarousel.module.css';
 const KEY_CODE_LEFT_ARROW = 37;
 const KEY_CODE_RIGHT_ARROW = 39;
 
-class DefectImageCarousel extends Component {
+class SectionImageCarousel extends Component {
   constructor(props) {
     super(props);
     this.state = { selectedImageIndex: 0, selectedImageLoaded: false };
@@ -123,14 +123,14 @@ class DefectImageCarousel extends Component {
   }
 }
 
-DefectImageCarousel.defaultProps = {
+SectionImageCarousel.defaultProps = {
   rootClassName: null,
   className: null,
 };
 
 const { string, arrayOf } = PropTypes;
 
-DefectImageCarousel.propTypes = {
+SectionImageCarousel.propTypes = {
   rootClassName: string,
   className: string,
   images: arrayOf(propTypes.image).isRequired,
@@ -139,4 +139,4 @@ DefectImageCarousel.propTypes = {
   intl: intlShape.isRequired,
 };
 
-export default injectIntl(DefectImageCarousel);
+export default injectIntl(SectionImageCarousel);
