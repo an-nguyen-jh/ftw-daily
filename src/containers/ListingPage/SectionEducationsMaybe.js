@@ -57,8 +57,4 @@ SectionEducationsMaybe.defaultProps = {
   educationConfig: config.custom.education,
 };
 
-SectionEducationsMaybe.propTypes = {
-  publicData: object.isRequired,
-};
-
 export default SectionEducationsMaybe;
