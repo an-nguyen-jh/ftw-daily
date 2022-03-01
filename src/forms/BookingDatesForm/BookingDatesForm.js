@@ -5,10 +5,17 @@ import { Form as FinalForm, FormSpy } from 'react-final-form';
 import classNames from 'classnames';
 import moment from 'moment';
 import config from '../../config';
+import { formatMoney } from '../../util/currency';
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
 import { dateTimeFromSpecificMoment } from '../../util/dates';
 import { propTypes } from '../../util/types';
-import { Form, IconSpinner, PrimaryButton, FieldDateAndTimeInput } from '../../components';
+import {
+  Form,
+  IconSpinner,
+  PrimaryButton,
+  FieldDateAndTimeInput,
+  FieldCheckbox,
+} from '../../components';
 import EstimatedBreakdownMaybe from './EstimatedBreakdownMaybe';
 
 import css from './BookingDatesForm.module.css';
@@ -47,7 +54,7 @@ export class BookingDatesFormComponent extends Component {
   // In case you add more fields to the form, make sure you add
   // the values here to the bookingData object.
   handleOnChange(form, formValues) {
-    const { startDate, startHour } = formValues.values ? formValues.values : {};
+    const { startDate, startHour, equipmentFee } = formValues.values ? formValues.values : {};
     const { listingId, isOwnListing, onFetchTransactionLineItems } = this.props;
     const { startTime, endTime } = generateStartTimeAndEndTimeOfClass(
       startDate?.date,
@@ -55,6 +62,7 @@ export class BookingDatesFormComponent extends Component {
       CLASS_DURATION,
       0
     );
+    const hasEquipmentFee = equipmentFee && equipmentFee.length > 0;
 
     const endTimeOfClass = endTime && endTime.clone().format('HH:mm');
     if (startHour && endTimeOfClass !== 'Invalid date') {
@@ -69,7 +77,7 @@ export class BookingDatesFormComponent extends Component {
       //time object in UTC format for Estimated breakdown
 
       onFetchTransactionLineItems({
-        bookingData: { startDate: bookingStartDate, endDate }, //from Moment to Date object
+        bookingData: { startDate: bookingStartDate, endDate, hasEquipmentFee }, //from Moment to Date object
         listingId,
         isOwnListing,
       });
@@ -126,6 +134,7 @@ export class BookingDatesFormComponent extends Component {
             fetchLineItemsInProgress,
             fetchLineItemsError,
             form,
+            equipmentFee,
           } = fieldRenderProps;
           const { startTime, endTime, startDate, endDate } = this.state;
 
@@ -188,6 +197,25 @@ export class BookingDatesFormComponent extends Component {
             </span>
           ) : null;
 
+          const equipmentFeeLabel = equipmentFee
+            ? intl.formatMessage(
+                {
+                  id: 'BookingDatesForm.equipmentFeeLabel',
+                },
+                {
+                  fee: formatMoney(intl, equipmentFee),
+                }
+              )
+            : null;
+          const equipmentFeeCheckboxMaybe = equipmentFee ? (
+            <FieldCheckbox
+              id="equipmentFee"
+              name="equipmentFee"
+              valued="equipmentFee"
+              className={css.equipmentCheckbox}
+              label={equipmentFeeLabel}
+            />
+          ) : null;
           const dateFormatOptions = {
             weekday: 'short',
             month: 'short',
@@ -241,6 +269,7 @@ export class BookingDatesFormComponent extends Component {
               {bookingInfoMaybe}
               {loadingSpinnerMaybe}
               {bookingInfoErrorMaybe}
+              {equipmentFeeCheckboxMaybe}
 
               <p className={css.smallPrint}>
                 <FormattedMessage

@@ -108,6 +108,7 @@ class FieldDateAndTimeInputComponent extends Component {
               id="endTime"
               name="endTime"
               type="text"
+              className={css.fieldText}
               readOnly
               disabled
               label={endTimeInputProps.label}

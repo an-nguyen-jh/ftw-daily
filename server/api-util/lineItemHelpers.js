@@ -203,3 +203,15 @@ exports.constructValidLineItems = lineItems => {
   });
   return lineItemsWithTotals;
 };
+
+exports.resolveEquipmentFee = listing => {
+  const publicData = listing.attributes.publicData;
+  const equipmentFee = publicData && publicData.cleaningFee;
+  const { amount, currency } = equipmentFee;
+
+  if (amount && currency) {
+    return new Money(amount, currency);
+  }
+
+  return null;
+};

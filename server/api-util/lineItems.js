@@ -1,4 +1,8 @@
-const { calculateQuantityFromDates, calculateTotalFromLineItems } = require('./lineItemHelpers');
+const {
+  calculateQuantityFromDates,
+  calculateTotalFromLineItems,
+  resolveEquipmentFee,
+} = require('./lineItemHelpers');
 const { types } = require('sharetribe-flex-sdk');
 const { Money } = types;
 
@@ -29,8 +33,9 @@ const PROVIDER_COMMISSION_PERCENTAGE = -10;
  */
 exports.transactionLineItems = (listing, bookingData) => {
   const unitPrice = listing.attributes.price;
-  const { startDate, endDate } = bookingData;
+  const { startDate, endDate, hasEquipmentFee } = bookingData;
 
+  const equipmentFeePrice = hasEquipmentFee ? resolveEquipmentFee(listing) : null;
   /**
    * If you want to use pre-defined component and translations for printing the lineItems base price for booking,
    * you should use one of the codes:
@@ -48,14 +53,21 @@ exports.transactionLineItems = (listing, bookingData) => {
     includeFor: ['customer', 'provider'],
   };
 
+  const equipmentFee = {
+    code: 'line-item/cleaning-fee',
+    equipmentFeePrice,
+    quantity: 1,
+    includeFor: ['customer', 'provider'],
+  };
+
   const providerCommission = {
     code: 'line-item/provider-commission',
-    unitPrice: calculateTotalFromLineItems([booking]),
+    unitPrice: calculateTotalFromLineItems([booking, ...equipmentFee]),
     percentage: PROVIDER_COMMISSION_PERCENTAGE,
     includeFor: ['provider'],
   };
 
-  const lineItems = [booking, providerCommission];
+  const lineItems = [booking, ...equipmentFee, providerCommission];
 
   return lineItems;
 };

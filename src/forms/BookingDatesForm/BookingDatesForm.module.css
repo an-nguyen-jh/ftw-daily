@@ -13,6 +13,14 @@
   z-index: 1;
 }
 
+.equipmentCheckbox {
+  margin: 12px 24px;
+  width: 100%;
+  @media (--viewportMedium) {
+    margin: 12px 0;
+  }
+}
+
 .priceBreakdownContainer {
   padding: 0 24px;
   margin-bottom: 40px;

@@ -46,6 +46,12 @@
   }
 }
 
+.fieldText {
+  flex-grow: 1;
+  margin-left: 24px;
+  margin-right: 24px;
+}
+
 .fieldDisabled {
   background: none;
   color: --matterColorNegative;

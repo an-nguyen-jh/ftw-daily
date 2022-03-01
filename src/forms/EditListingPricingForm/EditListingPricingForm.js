@@ -47,6 +47,10 @@ export const EditListingPricingFormComponent = props => (
         id: translationKey,
       });
 
+      const equipmentLabel = intl.formatMessage({
+        id: 'EditListingPricingForm.equipmentLabel',
+      });
+
       const pricePlaceholderMessage = intl.formatMessage({
         id: 'EditListingPricingForm.priceInputPlaceholder',
       });
@@ -85,6 +89,9 @@ export const EditListingPricingFormComponent = props => (
         })
       );
 
+      const equipmentFeePlaceHolder = intl.formatMessage({
+        id: 'EditListingPricingForm.equipmentFeePlaceholder',
+      });
       const classes = classNames(css.root, className);
       const submitReady = (updated && pristine) || ready;
       const submitInProgress = updateInProgress;
@@ -120,11 +127,19 @@ export const EditListingPricingFormComponent = props => (
             className={css.priceInput}
             autoFocus
             label={pricePerUnitMessage}
+            placeholder={equipmentFeePlaceHolder}
+            currencyConfig={config.currencyConfig}
+            validate={priceValidators}
+          />
+          <FieldCurrencyInput
+            id="equipmentFee"
+            name="equipmentFee"
+            className={css.priceInput}
+            label={equipmentLabel}
             placeholder={pricePlaceholderMessage}
             currencyConfig={config.currencyConfig}
             validate={priceValidators}
           />
-
           <Button
             className={css.submitButton}
             type="submit"

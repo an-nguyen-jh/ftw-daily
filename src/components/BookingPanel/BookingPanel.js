@@ -11,9 +11,11 @@ import { parse, stringify } from '../../util/urlHelpers';
 import config from '../../config';
 import { ModalInMobile, Button } from '../../components';
 import { BookingDatesForm } from '../../forms';
+import { types as sdkTypes } from '../../util/sdkLoader';
 
 import css from './BookingPanel.module.css';
 
+const { Money } = sdkTypes;
 // This defines when ModalInMobile shows content as Modal
 const MODAL_BREAKPOINT = 1023;
 
@@ -72,7 +74,8 @@ const BookingPanel = props => {
     fetchLineItemsError,
   } = props;
 
-  const price = listing.attributes.price;
+  const { price, publicData } = listing.attributes;
+  console.log('debug', listing.attributes);
 
   const hasListingState = !!listing.attributes.state;
   const isClosed = hasListingState && listing.attributes.state === LISTING_STATE_CLOSED;
@@ -80,6 +83,10 @@ const BookingPanel = props => {
   const showClosedListingHelpText = listing.id && isClosed;
   const { formattedPrice, priceTitle } = priceData(price, intl);
   const isBook = !!parse(location.search).book;
+  const equipmentFee =
+    publicData && publicData.equipmentFee
+      ? new Money(publicData.equipmentFee.amount, publicData.equipmentFee.currency)
+      : null;
 
   const subTitleText = !!subTitle
     ? subTitle
@@ -138,6 +145,7 @@ const BookingPanel = props => {
             lineItems={lineItems}
             fetchLineItemsInProgress={fetchLineItemsInProgress}
             fetchLineItemsError={fetchLineItemsError}
+            equipmentFee={equipmentFee}
           />
         ) : null}
       </ModalInMobile>

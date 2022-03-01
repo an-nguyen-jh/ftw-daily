@@ -50,16 +50,25 @@ const EditListingPricingPanel = props => {
   const paymentMethod =
     (publicData && publicData.paymentMethod) ||
     (paymentMethodOptions && paymentMethodOptions[0].key);
+  const equipmentFee = publicData.equipmentFee
+    ? new Money(publicData.equipmentFee.amount, publicData.equipmentFee.currency)
+    : {};
 
   const form = priceCurrencyValid ? (
     <EditListingPricingForm
       className={css.form}
-      initialValues={{ price, paymentMethod }}
+      initialValues={{ price, paymentMethod, equipmentFee }}
       onSubmit={values => {
+        const { price, paymentMethod, equipmentFee: optionalEquipmentFee } = values;
+        console.log('debug', values);
         const updatedValues = {
-          price: values.price,
+          price: price,
           publicData: {
-            paymentMethod: values.paymentMethod,
+            paymentMethod: paymentMethod,
+            equipmentFee: {
+              amount: optionalEquipmentFee.amount,
+              currency: optionalEquipmentFee.currency,
+            },
           },
         };
         onSubmit(updatedValues);
