@@ -40,6 +40,7 @@ const LineItemUnknownItemsMaybe = props => {
             : humanizeLineItemCode(item.code);
 
         const formattedTotal = formatMoney(intl, item.lineTotal);
+        console.log('debug', { quantity, label: item.code, formattedTotal });
         return (
           <div key={`${i}-item.code`} className={css.lineItem}>
             <span className={css.itemLabel}>{label}</span>

@@ -46,6 +46,22 @@
     {:name :action/stripe-capture-payment-intent}],
    :from :state/preauthorized,
    :to :state/accepted}
+  {:name :transition/accept-instant-booking,
+   :actor :actor.role/customer,
+   :actions
+   [{:name :action/stripe-confirm-payment-intent}
+    {:name :action/accept-booking}
+    {:name :action/stripe-capture-payment-intent}],
+   :from :state/pending-payment,
+   :to :state/accepted}
+  {:name :transition/accept-non-refundable,
+   :actor :actor.role/provider,
+   :actions
+   [{:name :action/accept-booking}
+    {:name :action/stripe-capture-payment-intent}
+    {:name :action/stripe-create-payout}],
+   :from :state/preauthorized,
+   :to :state/accepted-non-refundable}
   {:name :transition/decline,
    :actor :actor.role/provider,
    :actions
@@ -68,11 +84,27 @@
     {:name :action/stripe-refund-payment}],
    :from :state/preauthorized,
    :to :state/declined}
-  {:name :transition/complete,
-   :at {:fn/timepoint [:time/booking-end]},
+  {:name :transition/mark-end-cancellation-period,
+   :actor :actor.role/operator,
    :actions [{:name :action/stripe-create-payout}],
    :from :state/accepted,
+   :to :state/cancellation-period-ended}
+  {:name :transition/complete,
+   :at {:fn/timepoint [:time/booking-end]},
+   :from :state/cancellation-period-ended,
    :to :state/delivered}
+  {:name :transition/complete-non-refundable,
+   :at {:fn/timepoint [:time/booking-end]},
+   :from :state/accepted-non-refundable,
+   :to :state/delivered}
+  {:name :transition/cancel-by-customer,
+   :actor :actor.role/customer,
+   :actions
+   [{:name :action/cancel-booking}
+    {:name :action/calculate-full-refund}
+    {:name :action/stripe-refund-payment}],
+   :from :state/accepted,
+   :to :state/cancelled}
   {:name :transition/cancel,
    :actor :actor.role/operator,
    :actions

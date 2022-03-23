@@ -75,7 +75,6 @@ const BookingPanel = props => {
   } = props;
 
   const { price, publicData } = listing.attributes;
-  console.log('debug', listing.attributes);
 
   const hasListingState = !!listing.attributes.state;
   const isClosed = hasListingState && listing.attributes.state === LISTING_STATE_CLOSED;

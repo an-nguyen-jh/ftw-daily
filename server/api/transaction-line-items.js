@@ -15,7 +15,7 @@ module.exports = (req, res) => {
     .then(apiResponse => {
       const listing = apiResponse.data.data;
       const lineItems = transactionLineItems(listing, bookingData);
-
+      console.log('debug', lineItems);
       // Because we are using returned lineItems directly in FTW we need to use the helper function
       // to add some attributes like lineTotal and reversal that Marketplace API also adds to the response.
       const validLineItems = constructValidLineItems(lineItems);

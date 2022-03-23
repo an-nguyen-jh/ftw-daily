@@ -188,6 +188,7 @@ export const initiateOrder = (orderParams, transactionId) => (dispatch, getState
         transition,
         params: orderParams,
       };
+  console.log('debug', { orderParams, bookingData });
   const queryParams = {
     include: ['booking', 'provider'],
     expand: true,

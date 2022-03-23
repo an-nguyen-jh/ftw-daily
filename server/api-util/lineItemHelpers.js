@@ -206,7 +206,7 @@ exports.constructValidLineItems = lineItems => {
 
 exports.resolveEquipmentFee = listing => {
   const publicData = listing.attributes.publicData;
-  const equipmentFee = publicData && publicData.cleaningFee;
+  const equipmentFee = publicData && publicData.equipmentFee;
   const { amount, currency } = equipmentFee;
 
   if (amount && currency) {

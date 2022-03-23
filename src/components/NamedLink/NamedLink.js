@@ -43,14 +43,16 @@ export const NamedLinkComponent = props => {
   const active = match.url && match.url === pathname;
 
   // <a> element props
-  const { className, style, activeClassName } = props;
+  const { className, style, activeClassName, disabled, disabledClassName } = props;
   const aElemProps = {
     className: classNames(className, { [activeClassName]: active }),
     style,
     title,
   };
 
-  return (
+  return disabled ? (
+    <div className={disabledClassName}> {children} </div>
+  ) : (
     <Link onMouseOver={onOver} onTouchStart={onOver} to={{ pathname, ...to }} {...aElemProps}>
       {children}
     </Link>

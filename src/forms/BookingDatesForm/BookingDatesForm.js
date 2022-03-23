@@ -211,7 +211,7 @@ export class BookingDatesFormComponent extends Component {
             <FieldCheckbox
               id="equipmentFee"
               name="equipmentFee"
-              valued="equipmentFee"
+              value="equipmentFee"
               className={css.equipmentCheckbox}
               label={equipmentFeeLabel}
             />
@@ -266,10 +266,10 @@ export class BookingDatesFormComponent extends Component {
                 disabled={fetchLineItemsInProgress}
               />
 
+              {equipmentFeeCheckboxMaybe}
               {bookingInfoMaybe}
               {loadingSpinnerMaybe}
               {bookingInfoErrorMaybe}
-              {equipmentFeeCheckboxMaybe}
 
               <p className={css.smallPrint}>
                 <FormattedMessage

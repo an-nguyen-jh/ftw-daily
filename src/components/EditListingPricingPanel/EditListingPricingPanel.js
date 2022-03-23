@@ -60,7 +60,6 @@ const EditListingPricingPanel = props => {
       initialValues={{ price, paymentMethod, equipmentFee }}
       onSubmit={values => {
         const { price, paymentMethod, equipmentFee: optionalEquipmentFee } = values;
-        console.log('debug', values);
         const updatedValues = {
           price: price,
           publicData: {

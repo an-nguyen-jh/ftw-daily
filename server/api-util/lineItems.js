@@ -53,12 +53,16 @@ exports.transactionLineItems = (listing, bookingData) => {
     includeFor: ['customer', 'provider'],
   };
 
-  const equipmentFee = {
-    code: 'line-item/cleaning-fee',
-    equipmentFeePrice,
-    quantity: 1,
-    includeFor: ['customer', 'provider'],
-  };
+  const equipmentFee = hasEquipmentFee
+    ? [
+        {
+          code: 'line-item/equipment-fee',
+          unitPrice: equipmentFeePrice,
+          quantity: 1,
+          includeFor: ['customer', 'provider'],
+        },
+      ]
+    : [];
 
   const providerCommission = {
     code: 'line-item/provider-commission',
@@ -66,6 +70,7 @@ exports.transactionLineItems = (listing, bookingData) => {
     percentage: PROVIDER_COMMISSION_PERCENTAGE,
     includeFor: ['provider'],
   };
+  console.log('debug', providerCommission);
 
   const lineItems = [booking, ...equipmentFee, providerCommission];
 
