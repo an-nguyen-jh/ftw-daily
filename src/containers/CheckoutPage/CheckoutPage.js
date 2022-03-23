@@ -182,7 +182,12 @@ export class CheckoutPageComponent extends Component {
     if (shouldFetchSpeculatedTransaction) {
       const listingId = pageData.listing.id;
       const transactionId = tx ? tx.id : null;
-      const { bookingStart, bookingEnd } = pageData.bookingDate;
+      const {
+        bookingStart,
+        bookingEnd,
+        bookingDisplayStart,
+        bookingDisplayEnd,
+      } = pageData.bookingDate;
       // Convert picked date to date that will be converted on the API as
       // a noon of correct year-month-date combo in UTC
       const bookingStartForAPI = dateFromLocalToAPI(bookingStart);
@@ -196,6 +201,8 @@ export class CheckoutPageComponent extends Component {
           listingId,
           bookingStart: bookingStartForAPI,
           bookingEnd: bookingEndForAPI,
+          bookingDisplayStart,
+          bookingDisplayEnd,
         },
         transactionId
       );
@@ -377,6 +384,8 @@ export class CheckoutPageComponent extends Component {
       listingId: pageData.listing.id,
       bookingStart: tx.booking.attributes.start,
       bookingEnd: tx.booking.attributes.end,
+      bookingDisplayStart: tx.booking.attributes.displayStart,
+      bookingDisplayEnd: tx.booking.attributes.displayEnd,
       ...optionalPaymentParams,
     };
 
@@ -576,9 +585,9 @@ export class CheckoutPageComponent extends Component {
     // (i.e. have an id)
     const tx = existingTransaction.booking ? existingTransaction : speculatedTransaction;
     const txBooking = ensureBooking(tx.booking);
-    //display start and end time of class
-    txBooking.attributes.displayStart = bookingData.startTime;
-    txBooking.attributes.displayEnd = bookingData.endTime;
+    // //display start and end time of class
+    // txBooking.attributes.displayStart = bookingData.startTime;
+    // txBooking.attributes.displayEnd = bookingData.endTime;
 
     const breakdown =
       tx.id && txBooking.id ? (
@@ -588,7 +597,6 @@ export class CheckoutPageComponent extends Component {
           unitType={config.bookingUnitType}
           transaction={tx}
           booking={txBooking}
-          dateType={DATE_TYPE_DATE}
         />
       ) : null;
 
