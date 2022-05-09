@@ -74,7 +74,7 @@ const stripeElementsOptions = {
 const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 const cardStyles = {
   base: {
-    fontFamily: '"Source Sans Pro", sans-serif;',
+    fontFamily: '"Source Sans Pro", sans-serif',
     fontSize: isMobile ? '14px' : '18px',
     fontSmoothing: 'antialiased',
     lineHeight: '24px',

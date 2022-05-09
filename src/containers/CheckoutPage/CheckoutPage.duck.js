@@ -37,7 +37,7 @@ export const STRIPE_CUSTOMER_ERROR = 'app/CheckoutPage/STRIPE_CUSTOMER_ERROR';
 const initialState = {
   listing: null,
   bookingData: null,
-  bookingDates: null,
+  bookingDate: null,
   speculateTransactionInProgress: false,
   speculateTransactionError: null,
   speculatedTransaction: null,
@@ -357,6 +357,7 @@ export const speculateTransaction = (orderParams, transactionId) => (dispatch, g
 
   if (isTransition && isPrivilegedTransition) {
     // transition privileged
+
     return transitionPrivileged({ isSpeculative: true, bookingData, bodyParams, queryParams })
       .then(handleSuccess)
       .catch(handleError);

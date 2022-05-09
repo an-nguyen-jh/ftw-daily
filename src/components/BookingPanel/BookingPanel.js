@@ -58,6 +58,7 @@ const BookingPanel = props => {
     onSubmit,
     title,
     subTitle,
+    notice,
     authorDisplayName,
     onManageDisableScrolling,
     timeSlots,
@@ -72,6 +73,7 @@ const BookingPanel = props => {
   } = props;
 
   const price = listing.attributes.price;
+
   const hasListingState = !!listing.attributes.state;
   const isClosed = hasListingState && listing.attributes.state === LISTING_STATE_CLOSED;
   const showBookingDatesForm = hasListingState && !isClosed;
@@ -116,7 +118,9 @@ const BookingPanel = props => {
 
         <div className={css.bookingHeading}>
           <h2 className={titleClasses}>{title}</h2>
+
           {subTitleText ? <div className={css.bookingHelp}>{subTitleText}</div> : null}
+          {notice ? <p className={css.bookingNotice}>{notice}</p> : null}
         </div>
         {showBookingDatesForm ? (
           <BookingDatesForm

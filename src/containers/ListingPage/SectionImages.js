@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormattedMessage } from '../../util/reactIntl';
-import { ResponsiveImage, Modal, ImageCarousel } from '../../components';
+import { ResponsiveImage, Modal, ImageCarousel, SectionImageCarousel } from '../../components';
 import ActionBarMaybe from './ActionBarMaybe';
 
 import css from './ListingPage.module.css';
@@ -40,19 +40,12 @@ const SectionImages = props => {
   return (
     <div className={css.sectionImages}>
       <div className={css.threeToTwoWrapper}>
-        <div className={css.aspectWrapper} onClick={handleViewPhotosClick}>
+        <div className={css.aspectWrapper}>
           {actionBar}
-          <ResponsiveImage
-            rootClassName={css.rootForImage}
-            alt={title}
-            image={firstImage}
-            variants={[
-              'landscape-crop',
-              'landscape-crop2x',
-              'landscape-crop4x',
-              'landscape-crop6x',
-            ]}
-          />
+          <SectionImageCarousel
+            rootClassName={css.rootDefectCarousel}
+            images={listing.images}
+          ></SectionImageCarousel>
           {viewPhotosButton}
         </div>
       </div>

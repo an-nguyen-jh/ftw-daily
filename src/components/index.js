@@ -61,6 +61,7 @@ export { default as ValidationError } from './ValidationError/ValidationError';
 
 export { default as Button, PrimaryButton, SecondaryButton, InlineTextButton, SocialLoginButton } from './Button/Button';
 export { default as CookieConsent } from './CookieConsent/CookieConsent';
+export {default as SectionImageCarousel} from "./ImageCarousel/SectionImageCarousel";
 export { default as ImageCarousel } from './ImageCarousel/ImageCarousel';
 export { default as ImageFromFile } from './ImageFromFile/ImageFromFile';
 export { default as ListingLink } from './ListingLink/ListingLink';
@@ -92,6 +93,7 @@ export { default as FieldCurrencyInput } from './FieldCurrencyInput/FieldCurrenc
 export { default as FieldDateInput } from './FieldDateInput/FieldDateInput';
 export { default as FieldDateRangeController } from './FieldDateRangeController/FieldDateRangeController';
 export { default as FieldDateRangeInput } from './FieldDateRangeInput/FieldDateRangeInput';
+export {default as FieldDateAndTimeInput} from "./FieldDateAndTimeInput/FieldDateAndTimeInput";
 export { default as FieldRadioButton } from './FieldRadioButton/FieldRadioButton';
 export { default as FieldReviewRating } from './FieldReviewRating/FieldReviewRating';
 export { default as FieldSelect } from './FieldSelect/FieldSelect';

@@ -46,12 +46,13 @@ import SectionImages from './SectionImages';
 import SectionAvatar from './SectionAvatar';
 import SectionHeading from './SectionHeading';
 import SectionDescriptionMaybe from './SectionDescriptionMaybe';
-import SectionFeaturesMaybe from './SectionFeaturesMaybe';
 import SectionReviews from './SectionReviews';
 import SectionHostMaybe from './SectionHostMaybe';
 import SectionRulesMaybe from './SectionRulesMaybe';
 import SectionMapMaybe from './SectionMapMaybe';
+import SectionEducationsMaybe from './SectionEducationsMaybe';
 import css from './ListingPage.module.css';
+import SectionSimilarClassMaybe from './SectionSimilarClassMaybe';
 
 const MIN_LENGTH_FOR_LONG_WORDS_IN_TITLE = 16;
 
@@ -68,11 +69,6 @@ const priceData = (price, intl) => {
     };
   }
   return {};
-};
-
-const categoryLabel = (categories, key) => {
-  const cat = categories.find(c => c.key === key);
-  return cat ? cat.label : key;
 };
 
 export class ListingPageComponent extends Component {
@@ -101,14 +97,16 @@ export class ListingPageComponent extends Component {
     const listingId = new UUID(params.id);
     const listing = getListing(listingId);
 
-    const { bookingDates, ...bookingData } = values;
+    const { startDate, endDate, startTime, endTime, ...bookingData } = values;
 
     const initialValues = {
       listing,
       bookingData,
-      bookingDates: {
-        bookingStart: bookingDates.startDate,
-        bookingEnd: bookingDates.endDate,
+      bookingDate: {
+        bookingStart: startDate,
+        bookingEnd: endDate,
+        bookingDisplayStart: startTime,
+        bookingDisplayEnd: endTime,
       },
       confirmPaymentError: null,
     };
@@ -186,7 +184,9 @@ export class ListingPageComponent extends Component {
       scrollingDisabled,
       showListingError,
       reviews,
+      similarClasses,
       fetchReviewsError,
+      fetchSimilarClassError,
       sendEnquiryInProgress,
       sendEnquiryError,
       timeSlots,
@@ -197,7 +197,6 @@ export class ListingPageComponent extends Component {
       fetchLineItemsInProgress,
       fetchLineItemsError,
     } = this.props;
-
     const listingId = new UUID(rawParams.id);
     const isPendingApprovalVariant = rawParams.variant === LISTING_PAGE_PENDING_APPROVAL_VARIANT;
     const isDraftVariant = rawParams.variant === LISTING_PAGE_DRAFT_VARIANT;
@@ -255,6 +254,7 @@ export class ListingPageComponent extends Component {
       <FormattedMessage id="ListingPage.bookingTitle" values={{ title: richTitle }} />
     );
     const bookingSubTitle = intl.formatMessage({ id: 'ListingPage.bookingSubTitle' });
+    const bookingNotice = intl.formatMessage({ id: 'ListingPage.bookingNotice' });
 
     const topbar = <TopbarContainer />;
 
@@ -376,15 +376,7 @@ export class ListingPageComponent extends Component {
       </NamedLink>
     );
 
-    const amenityOptions = findOptionsForSelectFilter('amenities', filterConfig);
-    const categoryOptions = findOptionsForSelectFilter('category', filterConfig);
-    const category =
-      publicData && publicData.category ? (
-        <span>
-          {categoryLabel(categoryOptions, publicData.category)}
-          <span className={css.separator}>•</span>
-        </span>
-      ) : null;
+    const educationTypeOptions = findOptionsForSelectFilter('educationType', filterConfig);
 
     return (
       <Page
@@ -429,14 +421,12 @@ export class ListingPageComponent extends Component {
                     priceTitle={priceTitle}
                     formattedPrice={formattedPrice}
                     richTitle={richTitle}
-                    category={category}
                     hostLink={hostLink}
                     showContactUser={showContactUser}
                     onContactUser={this.onContactUser}
                   />
                   <SectionDescriptionMaybe description={description} />
-                  <SectionFeaturesMaybe options={amenityOptions} publicData={publicData} />
-                  <SectionRulesMaybe publicData={publicData} />
+                  <SectionEducationsMaybe options={educationTypeOptions} publicData={publicData} />
                   <SectionMapMaybe
                     geolocation={geolocation}
                     publicData={publicData}
@@ -465,6 +455,7 @@ export class ListingPageComponent extends Component {
                   onSubmit={handleBookingSubmit}
                   title={bookingTitle}
                   subTitle={bookingSubTitle}
+                  notice={bookingNotice}
                   authorDisplayName={authorDisplayName}
                   onManageDisableScrolling={onManageDisableScrolling}
                   timeSlots={timeSlots}
@@ -474,6 +465,10 @@ export class ListingPageComponent extends Component {
                   fetchLineItemsInProgress={fetchLineItemsInProgress}
                   fetchLineItemsError={fetchLineItemsError}
                 />
+                <SectionSimilarClassMaybe
+                  similarClasses={similarClasses}
+                  fetchSimilarClassError={fetchSimilarClassError}
+                ></SectionSimilarClassMaybe>
               </div>
             </div>
           </LayoutWrapperMain>
@@ -493,6 +488,7 @@ ListingPageComponent.defaultProps = {
   showListingError: null,
   reviews: [],
   fetchReviewsError: null,
+  fetchSimilarClassError: null,
   timeSlots: null,
   fetchTimeSlotsError: null,
   sendEnquiryError: null,
@@ -531,6 +527,7 @@ ListingPageComponent.propTypes = {
   callSetInitialValues: func.isRequired,
   reviews: arrayOf(propTypes.review),
   fetchReviewsError: propTypes.error,
+  fetchSimilarClassError: propTypes.error,
   timeSlots: arrayOf(propTypes.timeSlot),
   fetchTimeSlotsError: propTypes.error,
   sendEnquiryInProgress: bool.isRequired,
@@ -549,7 +546,10 @@ const mapStateToProps = state => {
   const {
     showListingError,
     reviews,
+    similarClasses,
     fetchReviewsError,
+    fetchSimilarClassError,
+
     timeSlots,
     fetchTimeSlotsError,
     sendEnquiryInProgress,
@@ -582,7 +582,9 @@ const mapStateToProps = state => {
     enquiryModalOpenForListingId,
     showListingError,
     reviews,
+    similarClasses,
     fetchReviewsError,
+    fetchSimilarClassError,
     timeSlots,
     fetchTimeSlotsError,
     lineItems,

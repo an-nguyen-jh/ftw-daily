@@ -70,6 +70,10 @@
   }
 }
 
+.shrinkNavigationButton {
+  width: 20vw;
+}
+
 .prev {
   left: 0;
   background-image: url('data:image/svg+xml;utf8,<svg width="7" height="10" viewBox="0 0 7 10" xmlns="http://www.w3.org/2000/svg"><path d="M5.667 1c.094 0 .188.04.254.118.12.14.102.35-.038.47L1.85 5l4.032 3.412c.14.12.158.33.04.47-.12.14-.33.158-.47.04L1.117 5.254C1.043 5.19 1 5.098 1 5s.043-.19.118-.255L5.45 1.08c.064-.054.14-.08.217-.08" stroke="%23FFF" fill="%23FFF" fill-rule="evenodd"/></svg>');
@@ -111,6 +115,10 @@
 .image {
   /* Fit image in the available space as big as possible, keeping the aspect ratio */
   object-fit: contain;
+}
+
+.defectImage {
+  object-fit: cover;
 }
 
 .imageLoading {

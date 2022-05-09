@@ -135,16 +135,18 @@ export const TransactionPageComponent = props => {
 
   // Customer can create a booking, if the tx is in "enquiry" state.
   const handleSubmitBookingRequest = values => {
-    const { bookingDates, ...bookingData } = values;
+    const { startDate, endDate, startTime, endTime, ...bookingData } = values;
 
     const initialValues = {
       listing: currentListing,
       // enquired transaction should be passed to CheckoutPage
       transaction: currentTransaction,
       bookingData,
-      bookingDates: {
-        bookingStart: bookingDates.startDate,
-        bookingEnd: bookingDates.endDate,
+      bookingDate: {
+        bookingStart: startDate,
+        bookingEnd: endDate,
+        bookingDisplayStart: startTime,
+        bookingDisplayEnd: endTime,
       },
       confirmPaymentError: null,
     };

@@ -26,6 +26,7 @@ class FieldDateInputComponent extends Component {
       input,
       meta,
       useMobileMargins,
+      showErrorMessage,
       ...rest
     } = this.props;
 
@@ -68,7 +69,7 @@ class FieldDateInputComponent extends Component {
           </label>
         ) : null}
         <DateInput className={inputClasses} {...inputProps} />
-        <ValidationError className={errorClasses} fieldMeta={meta} />
+        {showErrorMessage ? <ValidationError className={errorClasses} fieldMeta={meta} /> : null}
       </div>
     );
   }
@@ -82,6 +83,7 @@ FieldDateInputComponent.defaultProps = {
   label: null,
   placeholderText: null,
   timeSlots: null,
+  showErrorMessage: true,
 };
 
 FieldDateInputComponent.propTypes = {
@@ -91,6 +93,7 @@ FieldDateInputComponent.propTypes = {
   id: string,
   label: string,
   placeholderText: string,
+  showErrorMessage: bool,
   timeSlots: arrayOf(propTypes.timeSlot),
   input: object.isRequired,
   meta: object.isRequired,

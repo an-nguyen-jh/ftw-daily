@@ -270,3 +270,23 @@ export const formatDateToText = (intl, date) => {
     }),
   };
 };
+
+/**
+ * Get date time from a specific day
+ *
+ * @param {String} date in dateTime format
+ *
+ * @param {Number} days the additional number of days from date
+ *
+ * @param {Number} hours the additional hours from the beginning of day
+ *
+ * @returns {moment} moment object with additional days and hours
+ */
+
+export const dateTimeFromSpecificMoment = (date, days, hours) => {
+  const now = moment(date);
+  return now
+    .startOf('day')
+    .add(days, 'days')
+    .add(hours, 'hours');
+};

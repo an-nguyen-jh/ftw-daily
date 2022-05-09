@@ -1,0 +1,44 @@
+@import '../../styles/propertySets.css';
+
+.root {
+  margin-bottom: 23px;
+  width: 100%;
+  padding: 0 24px;
+  @media (--viewportMedium) {
+    margin-bottom: 51px;
+    padding: 0;
+  }
+
+  @media (--viewportLarge) {
+    margin-top: 50px;
+    margin-bottom: 0px;
+  }
+}
+
+.title {
+  @apply --marketplaceH2FontStyles;
+}
+
+.classWrapper {
+  display: flex;
+  flex-wrap: wrap;
+
+  @media (--viewportMedium) {
+    flex-wrap: nowrap;
+  }
+}
+
+.listingCard {
+  margin-bottom: 36px;
+  flex-basis: 100%;
+
+  @media (--viewportMedium) {
+    flex-basis: calc(50% - 12px);
+    margin-right: 24px;
+  }
+
+  @media (--viewportLarge) {
+    flex-basis: calc(33.33% - 16px);
+    margin-right: 24px;
+  }
+}

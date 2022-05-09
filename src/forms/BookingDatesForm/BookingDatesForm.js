@@ -6,63 +6,78 @@ import classNames from 'classnames';
 import moment from 'moment';
 import config from '../../config';
 import { FormattedMessage, intlShape, injectIntl } from '../../util/reactIntl';
-import { required, bookingDatesRequired, composeValidators } from '../../util/validators';
-import { START_DATE, END_DATE } from '../../util/dates';
+import { dateTimeFromSpecificMoment } from '../../util/dates';
 import { propTypes } from '../../util/types';
-import { Form, IconSpinner, PrimaryButton, FieldDateRangeInput } from '../../components';
+import { Form, IconSpinner, PrimaryButton, FieldDateAndTimeInput } from '../../components';
 import EstimatedBreakdownMaybe from './EstimatedBreakdownMaybe';
 
 import css from './BookingDatesForm.module.css';
 
-const identity = v => v;
+const CLASS_DURATION = 8; //hours
+
+const generateStartTimeAndEndTimeOfClass = (startDate, startHour, classDuration, breakTime) => {
+  if (!startDate) {
+    return {};
+  }
+  const startTime = dateTimeFromSpecificMoment(startDate, 0, startHour);
+  const endTime = dateTimeFromSpecificMoment(startDate, 0, startHour + classDuration + breakTime);
+  return startTime && endTime ? { startTime, endTime } : {};
+};
 
 export class BookingDatesFormComponent extends Component {
   constructor(props) {
     super(props);
-    this.state = { focusedInput: null };
-    this.handleFormSubmit = this.handleFormSubmit.bind(this);
-    this.onFocusedInputChange = this.onFocusedInputChange.bind(this);
+    this.state = { startTime: null, endTime: null, startDate: null, endDate: null };
     this.handleOnChange = this.handleOnChange.bind(this);
+    this.handleFormSubmit = this.handleFormSubmit.bind(this);
   }
 
-  // Function that can be passed to nested components
-  // so that they can notify this component when the
-  // focused input changes.
-  onFocusedInputChange(focusedInput) {
-    this.setState({ focusedInput });
+  handleFormSubmit(values) {
+    const { startTime, endTime, startDate, endDate } = this.state;
+    const updatedValues = {
+      startDate,
+      startTime,
+      endTime,
+      endDate,
+    };
+    this.props.onSubmit(updatedValues);
   }
-
-  // In case start or end date for the booking is missing
-  // focus on that input, otherwise continue with the
-  // default handleSubmit function.
-  handleFormSubmit(e) {
-    const { startDate, endDate } = e.bookingDates || {};
-    if (!startDate) {
-      e.preventDefault();
-      this.setState({ focusedInput: START_DATE });
-    } else if (!endDate) {
-      e.preventDefault();
-      this.setState({ focusedInput: END_DATE });
-    } else {
-      this.props.onSubmit(e);
-    }
-  }
-
   // When the values of the form are updated we need to fetch
   // lineItems from FTW backend for the EstimatedTransactionMaybe
   // In case you add more fields to the form, make sure you add
   // the values here to the bookingData object.
-  handleOnChange(formValues) {
-    const { startDate, endDate } =
-      formValues.values && formValues.values.bookingDates ? formValues.values.bookingDates : {};
-    const listingId = this.props.listingId;
-    const isOwnListing = this.props.isOwnListing;
+  handleOnChange(form, formValues) {
+    const { startDate, startHour } = formValues.values ? formValues.values : {};
+    const { listingId, isOwnListing, onFetchTransactionLineItems } = this.props;
+    const { startTime, endTime } = generateStartTimeAndEndTimeOfClass(
+      startDate?.date,
+      parseInt(startHour),
+      CLASS_DURATION,
+      0
+    );
 
-    if (startDate && endDate && !this.props.fetchLineItemsInProgress) {
-      this.props.onFetchTransactionLineItems({
-        bookingData: { startDate, endDate },
+    const endTimeOfClass = endTime && endTime.clone().format('HH:mm');
+    if (startHour && endTimeOfClass !== 'Invalid date') {
+      form.change('endTime', endTimeOfClass);
+    }
+
+    if (startHour && startTime && endTime && !this.props.fetchLineItemsInProgress) {
+      const endDate = dateTimeFromSpecificMoment(startDate.date, 1, 0).toDate();
+      const bookingStartDate = moment(startDate.date)
+        .startOf('day')
+        .toDate();
+      //time object in UTC format for Estimated breakdown
+
+      onFetchTransactionLineItems({
+        bookingData: { startDate: bookingStartDate, endDate }, //from Moment to Date object
         listingId,
         isOwnListing,
+      });
+      this.setState({
+        startTime: startTime.toDate(),
+        endTime: endTime.toDate(),
+        endDate: endDate,
+        startDate: bookingStartDate,
       });
     }
   }
@@ -97,7 +112,6 @@ export class BookingDatesFormComponent extends Component {
         onSubmit={this.handleFormSubmit}
         render={fieldRenderProps => {
           const {
-            endDatePlaceholder,
             startDatePlaceholder,
             formId,
             handleSubmit,
@@ -111,46 +125,49 @@ export class BookingDatesFormComponent extends Component {
             lineItems,
             fetchLineItemsInProgress,
             fetchLineItemsError,
+            form,
           } = fieldRenderProps;
-          const { startDate, endDate } = values && values.bookingDates ? values.bookingDates : {};
+          const { startTime, endTime, startDate, endDate } = this.state;
 
           const bookingStartLabel = intl.formatMessage({
             id: 'BookingDatesForm.bookingStartTitle',
           });
-          const bookingEndLabel = intl.formatMessage({
-            id: 'BookingDatesForm.bookingEndTitle',
-          });
-          const requiredMessage = intl.formatMessage({
-            id: 'BookingDatesForm.requiredDate',
-          });
-          const startDateErrorMessage = intl.formatMessage({
-            id: 'FieldDateRangeInput.invalidStartDate',
-          });
-          const endDateErrorMessage = intl.formatMessage({
-            id: 'FieldDateRangeInput.invalidEndDate',
-          });
+
           const timeSlotsError = fetchTimeSlotsError ? (
             <p className={css.sideBarError}>
               <FormattedMessage id="BookingDatesForm.timeSlotsError" />
             </p>
           ) : null;
 
+          const startTimeInputProps = {
+            label: intl.formatMessage({ id: 'BookingDatesForm.startTime' }),
+            requiredMessage: intl.formatMessage({ id: 'BookingDatesForm.startTimeRequired' }),
+          };
+          const endTimeInputProps = {
+            label: intl.formatMessage({ id: 'BookingDatesForm.endTime' }),
+            requiredMessage: intl.formatMessage({ id: 'BookingDatesForm.endTimeRequired' }),
+            placeholder: intl.formatMessage({ id: 'BookingDatesForm.endTimePlaceholder' }),
+          };
           // This is the place to collect breakdown estimation data.
           // Note: lineItems are calculated and fetched from FTW backend
           // so we need to pass only booking data that is needed otherwise
           // If you have added new fields to the form that will affect to pricing,
           // you need to add the values to handleOnChange function
           const bookingData =
-            startDate && endDate
+            startDate && endTime && startTime && endDate
               ? {
                   unitType,
                   startDate,
+                  startTime,
                   endDate,
+                  endTime,
                 }
               : null;
 
           const showEstimatedBreakdown =
             bookingData && lineItems && !fetchLineItemsInProgress && !fetchLineItemsError;
+          //customer start booking from tomorrow
+          const fixedTimeSlots = timeSlots && timeSlots.slice(1);
 
           const bookingInfoMaybe = showEstimatedBreakdown ? (
             <div className={css.priceBreakdownContainer}>
@@ -177,48 +194,47 @@ export class BookingDatesFormComponent extends Component {
             day: 'numeric',
           };
 
-          const now = moment();
-          const today = now.startOf('day').toDate();
-          const tomorrow = now
+          const tomorrow = moment()
             .startOf('day')
             .add(1, 'days')
             .toDate();
           const startDatePlaceholderText =
-            startDatePlaceholder || intl.formatDate(today, dateFormatOptions);
-          const endDatePlaceholderText =
-            endDatePlaceholder || intl.formatDate(tomorrow, dateFormatOptions);
+            startDatePlaceholder || intl.formatDate(tomorrow, dateFormatOptions);
+
           const submitButtonClasses = classNames(
             submitButtonWrapperClassName || css.submitButtonWrapper
           );
 
+          const startDateInputProps = {
+            label: bookingStartLabel,
+            placeholderText: startDatePlaceholderText,
+            requiredMessage: intl.formatMessage({
+              id: 'BookingDatesForm.startDateRequiredMessage',
+            }),
+          };
+
+          const inputProps = { startDateInputProps, startTimeInputProps, endTimeInputProps };
           return (
             <Form onSubmit={handleSubmit} className={classes} enforcePagePreloadFor="CheckoutPage">
               {timeSlotsError}
               <FormSpy
                 subscription={{ values: true }}
                 onChange={values => {
-                  this.handleOnChange(values);
+                  this.handleOnChange(form, values);
                 }}
               />
-              <FieldDateRangeInput
-                className={css.bookingDates}
-                name="bookingDates"
+
+              <FieldDateAndTimeInput
+                {...inputProps}
+                formId={formId}
+                className={css.bookingDate}
+                name="bookingDate"
+                intl={intl}
                 unitType={unitType}
-                startDateId={`${formId}.bookingStartDate`}
-                startDateLabel={bookingStartLabel}
-                startDatePlaceholderText={startDatePlaceholderText}
-                endDateId={`${formId}.bookingEndDate`}
-                endDateLabel={bookingEndLabel}
-                endDatePlaceholderText={endDatePlaceholderText}
-                focusedInput={this.state.focusedInput}
-                onFocusedInputChange={this.onFocusedInputChange}
-                format={identity}
-                timeSlots={timeSlots}
+                values={values}
+                timeSlots={fixedTimeSlots}
                 useMobileMargins
-                validate={composeValidators(
-                  required(requiredMessage),
-                  bookingDatesRequired(startDateErrorMessage, endDateErrorMessage)
-                )}
+                form={form}
                 disabled={fetchLineItemsInProgress}
               />
 

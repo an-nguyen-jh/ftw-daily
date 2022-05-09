@@ -71,8 +71,12 @@
 
   @media (--viewportLarge) {
     display: block;
-    margin-bottom: 30px;
   }
+}
+
+.bookingNotice {
+  font-style: italic;
+  font-size: 14px;
 }
 
 .bookingTitle {

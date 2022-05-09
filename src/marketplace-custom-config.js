@@ -33,6 +33,11 @@
  *         (i.e. pub_<key> or meta_<key>).
  */
 
+export const education = {
+  EDUCATION_CLASS: 'educationClass',
+  EDUCATION_LEVEL: 'educationLevel',
+};
+
 export const filters = [
   {
     id: 'dates',
@@ -148,7 +153,7 @@ export const filters = [
     label: 'Education Type',
     type: 'SelectSingleFilter',
     group: 'secondary',
-    queryParamNames: ['education_type'],
+    queryParamNames: ['pub_educationType'],
     config: {
       options: [
         {
@@ -167,56 +172,56 @@ export const filters = [
     label: 'Education Class',
     type: 'SelectSingleFilter',
     group: 'secondary',
-    queryParamNames: ['education_class'],
+    queryParamNames: ['pub_educationClass'],
     config: {
       options: [
         {
           key: 'class',
-          label: 'Class 1',
+          label: '1st Class',
         },
         {
           key: 'class_2',
-          label: 'Class 2',
+          label: '2nd Class',
         },
         {
           key: 'class_3',
-          label: 'Class 3',
+          label: '3rd Class',
         },
         {
           key: 'class_4',
-          label: 'Class 4',
+          label: '4th Class',
         },
         {
           key: 'class_5',
-          label: 'Class 5',
+          label: '5th Class',
         },
         {
           key: 'class_6',
-          label: 'Class 6',
+          label: '6th Class',
         },
         {
           key: 'class_7',
-          label: 'Class 7',
+          label: '7th Class',
         },
         {
           key: 'class_8',
-          label: 'Class 8',
+          label: '8th Class',
         },
         {
           key: 'class_9',
-          label: 'Class 9',
+          label: '9th Class',
         },
         {
           key: 'class_10',
-          label: 'Class 10',
+          label: '10th Class',
         },
         {
           key: 'class_11',
-          label: 'Class 11',
+          label: '11th Class',
         },
         {
           key: 'class_12',
-          label: 'Class 12',
+          label: '12th Class',
         },
       ],
     },
@@ -226,7 +231,7 @@ export const filters = [
     label: 'Education Level',
     type: 'SelectSingleFilter',
     group: 'secondary',
-    queryParamNames: ['education_stage'],
+    queryParamNames: ['pub_educationStage'],
     config: {
       options: [
         {
@@ -238,7 +243,7 @@ export const filters = [
           label: 'Secondary',
         },
         {
-          key: 'high_school',
+          key: 'highSchool',
           label: 'High School',
         },
       ],
@@ -249,7 +254,7 @@ export const filters = [
     label: 'Payment Method',
     type: 'SelectSingleFilter',
     group: 'secondary',
-    queryParamNames: ['payment_method'],
+    queryParamNames: ['pub_paymentMethod'],
     config: {
       options: [
         {
